@@ -1,14 +1,14 @@
 /* LEETCODE
    snapshot: real figures read from the public profile on the date shown. Always labelled as a snapshot.
-   liveUrl: once the daily GitHub Action has run successfully in the real repository AND the deployed site serves
-   leetcode.json, set this to './leetcode.json' (the file written by scripts/leetcode-sync.mjs; keep the leading './'
-   so it works from any hosting path). The card then loads it, checks it, shows
-   when it was last updated, and falls back to this snapshot with an honest label if it can't be loaded.
+   liveUrl: './leetcode.json', the file written by scripts/leetcode-sync.mjs (keep the leading './' so it works from any
+   hosting path, including a project Pages site under /tdshanmmayi-portfolio/). The card loads it with no cache, checks it,
+   shows when it was last updated, and falls back to this snapshot with an honest label if it can't be loaded.
+   Set it back to '' to return the card to dated snapshot mode.
    No credentials live in this page. maxStreak is LeetCode's "max streak" for the past year, never a current streak. */
 export const LEETCODE = {
   user: 'ShanmayiShree',
   url: 'https://leetcode.com/u/ShanmayiShree/',
-  liveUrl: '',   // stays empty until the GitHub Action has run successfully and the deployed site serves leetcode.json. Then set it to './leetcode.json'.
+  liveUrl: './leetcode.json',   // written daily by the GitHub Action (06:00 IST). Keep the leading './' so it works under the project Pages path. The embedded snapshot below is the fallback.
   refreshMinutes: 60,   // how often an open page re-reads leetcode.json. The file itself changes once a day.
   snapshot: {
     fetchedAt: '2026-11-24T13:35:52Z', solved: 254, easy: 78, medium: 135, hard: 41, submissions: 315, activeDays: 130, maxStreak: 77,

@@ -2,24 +2,23 @@ name: Deploy to GitHub Pages
 
 # Builds the site and publishes it to GitHub Pages.
 #
-# STATUS: manual only. Nothing deploys until you press "Run workflow" in the Actions tab.
-# Automatic deploys are switched off on purpose until the site is ready to go public.
-#
-# To switch automatic deploys on, remove the leading "# " from the two blocks under "on:" below. They make it run
+# STATUS: automatic. It runs
 #   1. on every push to main
 #   2. after the "Sync LeetCode stats" workflow finishes (a commit pushed with GITHUB_TOKEN does not start a push
-#      run, so this is what puts a fresh public/leetcode.json on the live site)
+#      run, so this is what puts a fresh public/leetcode.json on the live site every day)
+#   3. when you press "Run workflow" in the Actions tab
 #
 # One-time setup before the first run: Settings > Pages > Build and deployment > Source = "GitHub Actions".
+# Without that setting the deploy step fails with a "Pages not enabled" style error and nothing is published.
 # Not using GitHub Pages? Delete this file. Vercel, Netlify and Cloudflare Pages rebuild on every commit by themselves.
 
 on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ['Sync LeetCode stats']
+    types: [completed]
   workflow_dispatch:
-  # push:
-  #   branches: [main]
-  # workflow_run:
-  #   workflows: ['Sync LeetCode stats']
-  #   types: [completed]
 
 # Nothing by default. The job asks only for what publishing needs.
 permissions: {}

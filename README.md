@@ -236,20 +236,20 @@ The email address in `CONTACT` is shown publicly and is also in the page source.
 
 ## LeetCode automation
 
-**Current state: prepared, not proven.** The report card is in dated snapshot mode. It says "SNAPSHOT, NOT LIVE" with the recording date, and `liveUrl` in `src/data/leetcode.js` is empty. The page makes no request to LeetCode.
+**Current state: first manual sync verified, daily schedule on, page reads the data file.**
+
+- The first manual run of "Sync LeetCode stats" succeeded in this repository and committed `public/leetcode.json` to `main` (`origin: "sync"`, `lastAttempt.ok: true`).
+- The workflow now also runs by itself every day at **00:30 UTC, which is 06:00 India Standard Time**. GitHub can start scheduled runs a few minutes late. The "Run workflow" button still works.
+- The report card loads `./leetcode.json` (`liveUrl` in `src/data/leetcode.js`) with no browser cache. If the file cannot be loaded or fails the checks, the card falls back to the snapshot built into the page and says so.
 
 What is in the repository:
 
 - `scripts/leetcode-sync.mjs` reads the public profile `https://leetcode.com/u/ShanmayiShree/`, validates the answer, and writes `public/leetcode.json`. If the refresh fails or the numbers look wrong, it keeps the last good data and only records the failed attempt.
-- `.github/workflows/leetcode-sync.yml` runs it on demand (Actions tab, "Run workflow"). The daily schedule (02:41 UTC) is written but switched off until one manual run has been checked; see `docs/leetcode-sync.md`. It uses the built-in `GITHUB_TOKEN` with `contents: write` for the one job that commits the file. Every other permission is off. No personal access token and no secrets.
-- `.github/workflows/deploy-pages.yml` publishes the site. It is manual-only for now. When switched on, it also runs after each sync, because a commit made with `GITHUB_TOKEN` does not start other workflows by itself.
-- `scripts/leetcode-sync.test.mjs` and `scripts/data.test.mjs` test all of it offline.
+- `.github/workflows/leetcode-sync.yml` runs it daily (06:00 IST) and on demand. It uses the built-in `GITHUB_TOKEN` with `contents: write` for the one job that commits the file. Every other permission is off. No personal access token and no secrets. It commits only when new valid data was retrieved or when a failed attempt needs recording.
+- `.github/workflows/deploy-pages.yml` publishes the site to GitHub Pages on every push to `main`, after every sync run, and on demand. The after-sync trigger is needed because a commit made with `GITHUB_TOKEN` does not start a push workflow. If it were off, the live site would not receive the new `leetcode.json` and the card would say "MAY BE OUT OF DATE" after 36 hours.
+- `scripts/leetcode-sync.test.mjs` and `scripts/data.test.mjs` test all of it offline, including the schedule time.
 
-Nothing has run on GitHub yet, so the automation has not been proven. After the repository exists:
-
-1. Push. Turn on Pages: Settings > Pages > Source: GitHub Actions.
-2. Run "Sync LeetCode stats" once by hand and check the run (the checklist is in `docs/leetcode-sync.md`).
-3. Only after that passes, set `liveUrl: './leetcode.json'` in `src/data/leetcode.js`, push, and confirm the card says "UPDATED DAILY FROM LEETCODE".
+The first scheduled run is due at 00:30 UTC (06:00 IST) after the change is pushed. It has not happened yet, so check the Actions tab afterwards (event "schedule") and confirm `fetchedAt` moved forward.
 
 `leetcode.com/graphql` is unofficial. LeetCode can change it or block GitHub's servers. If that happens the run fails, the old data stays, and the card says it may be out of date. Read `docs/leetcode-sync.md` for the full guide, the data format and the known limits.
 
@@ -259,9 +259,14 @@ The build is a folder of static files (`dist/`). Paths are relative (`base: './'
 
 ### GitHub Pages (included)
 
-1. Create the repository on GitHub and push this code to `main`.
-2. Settings > Pages > Build and deployment > Source: **GitHub Actions**.
-3. The "Deploy to GitHub Pages" workflow is **manual-only** as shipped, so pushing the code does not publish anything. Run it from the Actions tab ("Run workflow") for the first deploy. To make it deploy automatically on every push and after every LeetCode sync, remove the leading `# ` from the two blocks under `on:` in `.github/workflows/deploy-pages.yml`.
+Live address: `https://shan456786.github.io/tdshanmmayi-portfolio/`
+
+1. **Turn on Pages (once).** On GitHub open the repository, then Settings > Pages > Build and deployment > Source, and choose **GitHub Actions**. There is nothing else to pick: the workflow builds and publishes the `dist/` folder.
+2. **First deployment.** The "Deploy to GitHub Pages" workflow runs by itself on every push to `main` and after every "Sync LeetCode stats" run. To start it by hand: Actions tab > "Deploy to GitHub Pages" > Run workflow > branch `main` > Run workflow. If you turned Pages on after the last push, use this button.
+3. **Verify.** Open the run. Both steps "build" and "deploy" must be green, and the run page shows the URL under "github-pages". Open that URL (see `docs/leetcode-sync.md`, "Verify the live site") and check that the report card says "UPDATED DAILY FROM LEETCODE".
+4. **Branch protection.** If `main` is protected, allow GitHub Actions to push to it, or the daily data commit fails.
+
+Why two triggers: a commit made by the sync workflow uses the built-in `GITHUB_TOKEN`, and GitHub does not start ordinary push workflows for those commits. So the deploy workflow also listens for the sync workflow finishing (`workflow_run`), which is what puts each day's `leetcode.json` on the live site.
 
 ### Vercel, Netlify or Cloudflare Pages
 
@@ -279,7 +284,7 @@ Add it in the host's settings. If you use GitHub Pages, also add a `public/CNAME
 
 `npm run check` runs audit, lint, unit tests and the build. `npm run test:e2e` adds the browser tests.
 
-The browser tests (202 checks in the last run) cover: every image, font and script loading from the site itself with no failed or outside requests; all routes and deep links at desktop and phone width, refresh, back, forward and Escape; focus handling and inert backgrounds; the three worlds and everything clickable in them; all four case studies and the archive; the playground tools; contact links; the LeetCode card in snapshot, fresh, stale, failed-refresh, invalid and missing-file states; layouts from 360 to 1920 px wide with no sideways scrolling; accessibility basics (landmarks, names, alt text, skip link, focus); load performance; and React warnings in development mode.
+The browser tests (277 checks in the last run) cover: the whole site served under a GitHub Pages style project path (`/tdshanmmayi-portfolio/`) with the saved LeetCode data file; every image, font and script loading from the site itself with no failed or outside requests; all routes and deep links at desktop and phone width, refresh, back, forward and Escape; focus handling and inert backgrounds; the three worlds and everything clickable in them; all four case studies and the archive; the playground tools; contact links; the LeetCode card in snapshot, fresh, stale, failed-refresh, invalid and missing-file states; layouts from 360 to 1920 px wide with no sideways scrolling; accessibility basics (landmarks, names, alt text, skip link, focus); load performance; and React warnings in development mode.
 
 What they do **not** cover: browsers other than Chromium (Safari and Firefox are untested), screen readers, real phones and tablets, and a real run of the GitHub workflows.
 
@@ -296,13 +301,12 @@ The e2e run writes screenshots and a `results.json` to `tests/e2e/.out/` (ignore
 
 ## What still needs manual setup
 
-1. Create the GitHub repository and push (this export did not create or push anything).
-2. Settings > Pages > Source: GitHub Actions (or connect another host).
-3. Settings > Actions > General: allow Actions. If `main` is protected, allow GitHub Actions to push to it, or the daily data commit fails.
-4. Run "Sync LeetCode stats" once, verify, switch the daily schedule on (uncomment the two `schedule` lines in `leetcode-sync.yml`), then switch `liveUrl` on (see above). Until then the card stays a dated snapshot.
-5. Choose a licence for the code. None was added. The fonts keep their own SIL Open Font Licence files in `LICENSES/`.
-6. Confirm the public email address is the one she wants shown.
-7. Optional: real project screenshots, a custom domain, an Open Graph preview image.
+1. Settings > Pages > Build and deployment > Source: **GitHub Actions** (one time). Without it the deploy workflow cannot publish.
+2. Settings > Actions > General: allow Actions. If `main` is protected, allow GitHub Actions to push to it, or the daily data commit fails.
+3. After the first deployment, open the live address and check the report card (see `docs/leetcode-sync.md`, "Verify the live site"). After the first scheduled sync (00:30 UTC, 06:00 IST), check that `fetchedAt` moved forward and the site shows it.
+4. Choose a licence for the code. None was added. The fonts keep their own SIL Open Font Licence files in `LICENSES/`.
+5. Confirm the public email address is the one she wants shown.
+6. Optional: real project screenshots, a custom domain, an Open Graph preview image.
 
 ## How this relates to the Claude Design version
 

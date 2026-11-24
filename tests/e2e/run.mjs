@@ -10,6 +10,7 @@
 import { chromium } from 'playwright';
 import { preview, createServer } from 'vite';
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
@@ -68,7 +69,8 @@ try {
     check(G, 'No console warnings', log.warnings.length === 0, log.warnings.join(' | '));
     check(G, 'No failed requests (404, blocked, network)', log.failed.length === 0, log.failed.join(' | '));
     check(G, 'Every request stays on the site (fonts, images and scripts are self-hosted)', log.external.length === 0, log.external.join(' | '));
-    check(G, 'No request to leetcode.com or github.com while the card is in snapshot mode', !log.requests.some((u) => /leetcode\.com|github\.com|githubusercontent/.test(u)));
+    check(G, 'No request to leetcode.com or github.com from the visitor\'s browser (the card reads ./leetcode.json on the same site)', !log.requests.some((u) => /leetcode\.com|github\.com|githubusercontent/.test(u)));
+    check(G, 'The card requests ./leetcode.json from the same site, once per page load', log.requests.filter((u) => /\/leetcode\.json/.test(u)).length === 1, log.requests.filter((u) => /leetcode\.json/.test(u)).join(' | '));
     check(G, 'No leftover Claude Design asset paths', !log.requests.some((u) => u.includes('/_blob/')));
     const imgs = await p.evaluate(() => [...document.images].map((i) => ({ src: i.currentSrc || i.src, ok: i.complete && i.naturalWidth > 0, lazy: i.loading === 'lazy' })));
     check(G, `All ${imgs.length} images on the home page decoded (${imgs.filter((i) => i.lazy).length} lazy)`, imgs.length > 10 && imgs.every((i) => i.ok), imgs.filter((i) => !i.ok).map((i) => i.src).join(' | '));
@@ -236,40 +238,117 @@ try {
   // ------------------------------------------------------------------ 4. LeetCode card states
   {
     const G = 'LeetCode card';
-    const live = (src) => src.replace('liveUrl:``', 'liveUrl:`./leetcode.json`');
+    const snap = (src) => src.replace('liveUrl:`./leetcode.json`', 'liveUrl:``');
     const fileData = JSON.parse(fs.readFileSync(path.join(root, 'public/leetcode.json'), 'utf8'));
     const read = (p) => p.evaluate(() => ({ status: document.querySelector('.lc-status').textContent.trim().replace(/\s+/g, ' '), sub: document.querySelector('.rc-sub').textContent.trim(), foot: document.querySelector('.rc-foot span').textContent.trim(), body: document.querySelector('.rc-card').innerText }));
-    {
-      const { ctx, page: p, log } = await open();
+    const numbers = (d) => [d.solved, d.easy, d.medium, d.hard, d.activeDays, d.submissions, d.maxStreak];
+    const showsAll = (body, d) => numbers(d).every((n) => new RegExp('(^|\\D)' + n + '(\\D|$)').test(body));
+    const fixClock = (t) => (pg) => pg.clock.setFixedTime(new Date(t));
+    const jsonRoute = (status, body) => (pg) => pg.route(/leetcode\.json/, (r) => r.fulfill(status === 404 ? { status: 404, body: 'nope' } : { status, contentType: 'application/json', body: typeof body === 'string' ? body : JSON.stringify(body) }));
+    const fetched = Date.parse(fileData.fetchedAt);
+
+    // A. The shipped build, with the real file from this repository, at three moments in time.
+    const isSnapshot = fileData.origin === 'snapshot';
+    const normalStatus = isSnapshot ? /SNAPSHOT, NOT LIVE/i : /UPDATED DAILY FROM LEETCODE/i;
+    const normalStatusExclusion = isSnapshot
+      ? /UPDATED DAILY FROM LEETCODE|MAY BE OUT OF DATE|REFRESH FAILED/i
+      : /MAY BE OUT OF DATE|SNAPSHOT, NOT LIVE|REFRESH FAILED/i;
+
+    for (const [name, t, expect, notExpect] of [
+      ['Real data file, 5 hours after fetch', fetched + 5 * 3600e3, normalStatus, normalStatusExclusion],
+      ['Real data file, 35 hours after fetch', fetched + 35 * 3600e3, normalStatus, normalStatusExclusion],
+      ['Real data file, 37 hours after fetch (no refresh since)', fetched + 37 * 3600e3, /MAY BE OUT OF DATE/i, /UPDATED DAILY FROM LEETCODE|REFRESH FAILED/i]
+    ]) {
+      const { ctx, page: p, log } = await open({ route: fixClock(t) });
+      await wait(p, 600);
       const r = await read(p);
-      check(G, 'Shipped build is in dated snapshot mode: "SNAPSHOT, NOT LIVE" with a date', /SNAPSHOT, NOT LIVE/.test(r.status) && /\d{1,2} NOV 2026/i.test(r.status), r.status);
+      check(G, `${name}: label reads ${expect}`, expect.test(r.status + ' ' + r.sub + ' ' + r.foot), r.status);
+      check(G, `${name}: label does not say ${notExpect}`, !notExpect.test(r.status), r.status);
+      check(G, `${name}: every figure on the card equals the JSON file (solved, easy, medium, hard, active days, submissions, longest streak)`, showsAll(r.body, fileData), r.body.replace(/\s+/g, ' ').slice(0, 200));
+      check(G, `${name}: the real last-updated time is shown`, /NOV|UTC|HOUR|AGO|2026/i.test(r.status + ' ' + r.sub + ' ' + r.foot), r.status + ' / ' + r.sub + ' / ' + r.foot);
+      check(G, `${name}: the request for leetcode.json was sent without caching`, log.requests.some((u) => /leetcode\.json/.test(u)));
+      check(G, `${name}: no page errors`, log.errors.length === 0, log.errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      // The request asks the browser not to cache, and the answer is not taken from the HTTP cache.
+      const { ctx, page: p } = await open({ route: fixClock(fetched + 3600e3) });
+      const cc = await p.evaluate(async () => (await fetch('./leetcode.json', { cache: 'no-store' })).status);
+      check(G, 'The data file is served by the production build', cc === 200, cc);
+      await ctx.close();
+    }
+    {
+      // A second visit after the file changed on the server must show the new figures, not the old ones.
+      let version = 1;
+      const v1 = Object.assign({}, fileData, { origin: 'sync', solved: 254, fetchedAt: new Date(Date.now() - 2 * 3600e3).toISOString(), lastAttempt: { at: new Date(Date.now() - 2 * 3600e3).toISOString(), ok: true, error: null } });
+      const v2 = Object.assign({}, v1, { solved: 255, medium: 136, submissions: 316, fetchedAt: new Date().toISOString(), lastAttempt: { at: new Date().toISOString(), ok: true, error: null } });
+      const { ctx, page: p } = await open({ route: (pg) => pg.route(/leetcode\.json/, (r) => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'cache-control': 'public, max-age=86400' }, body: JSON.stringify(version === 1 ? v1 : v2) })) });
+      const r1 = await read(p);
+      version = 2;
+      await p.reload(); await wait(p, 900);
+      const r2 = await read(p);
+      check(G, 'Stale cache: after the file changes, a reload shows the new figures even if the server allowed caching', /255/.test(r2.body) && /136/.test(r2.body) && /316/.test(r2.body) && !/255/.test(r1.body), r1.status + ' -> ' + r2.status);
+      await ctx.close();
+    }
+
+    // B. Snapshot mode (liveUrl switched off): still available and honest.
+    {
+      const { ctx, page: p, log } = await open({ patch: snap });
+      const r = await read(p);
+      check(G, 'Snapshot mode: "SNAPSHOT, NOT LIVE" with a date', /SNAPSHOT, NOT LIVE/.test(r.status) && /\d{1,2} NOV 2026/i.test(r.status), r.status);
       check(G, 'Snapshot mode never says live or daily', !/UPDATED DAILY|LIVE UPDATE|AUTOMATIC/i.test(r.status + r.sub + r.foot) || /NOT LIVE/.test(r.status), r.status + ' / ' + r.sub);
-      check(G, 'Card shows 254 solved with 78 easy, 135 medium and 41 hard', /254/.test(r.body) && /78/.test(r.body) && /135/.test(r.body) && /41/.test(r.body));
-      check(G, 'Card shows 130 active days, 315 submissions and the dated longest streak of 77', /130/.test(r.body) && /315/.test(r.body) && /77/.test(r.body));
+      check(G, 'Snapshot mode shows 254 solved with 78 easy, 135 medium and 41 hard', /254/.test(r.body) && /78/.test(r.body) && /135/.test(r.body) && /41/.test(r.body));
+      check(G, 'Snapshot mode shows 130 active days, 315 submissions and the longest streak of 77', /130/.test(r.body) && /315/.test(r.body) && /77/.test(r.body));
       check(G, 'The 77 is labelled as a longest streak, never a current streak', /longest|max/i.test(r.body) && !/current streak/i.test(r.body));
       check(G, 'Snapshot mode makes no request to leetcode.json or leetcode.com', !log.requests.some((u) => /leetcode\.json|leetcode\.com/.test(u)));
       await ctx.close();
     }
+
+    // C. Failure and edge cases with the shipped (live) build. The previous good figures must stay on the card.
     const synced = (hoursAgo, extra = {}) => Object.assign({}, fileData, { origin: 'sync', fetchedAt: new Date(Date.now() - hoursAgo * 3600e3).toISOString(), lastAttempt: { at: new Date(Date.now() - hoursAgo * 3600e3).toISOString(), ok: true, error: null } }, extra);
     const scenarios = [
       ['Fresh sync (5 hours old)', synced(5), 200, /UPDATED DAILY FROM LEETCODE/i],
-      ['Sync older than 36 hours', synced(50), 200, /MAY BE OUT OF DATE|LAST UPDATED/i],
+      ['Sync older than 36 hours', synced(50), 200, /MAY BE OUT OF DATE/i],
       ['Newest refresh failed, older good data kept', synced(30, { lastAttempt: { at: new Date().toISOString(), ok: false, error: 'HTTP 403' } }), 200, /REFRESH FAILED/i],
-      ['The data file is still the starting snapshot (origin snapshot)', fileData, 200, /SNAPSHOT, NOT LIVE/i],
+      ['Newest refresh failed and the good data is over 36 hours old', synced(60, { lastAttempt: { at: new Date().toISOString(), ok: false, error: 'HTTP 403' } }), 200, /REFRESH FAILED|MAY BE OUT OF DATE/i],
+      ['The data file is still the starting snapshot (origin snapshot)', Object.assign({}, fileData, { origin: 'snapshot' }), 200, /SNAPSHOT, NOT LIVE/i],
       ['Invalid data (counts do not add up)', synced(2, { easy: 1 }), 200, /COULD NOT LOAD|SNAPSHOT/i],
+      ['Invalid data (missing fields)', { schema: 1, user: 'ShanmayiShree' }, 200, /COULD NOT LOAD|SNAPSHOT/i],
+      ['Data for a different user', synced(2, { user: 'someone-else' }), 200, /COULD NOT LOAD|SNAPSHOT/i],
+      ['Future timestamp', synced(-48), 200, /COULD NOT LOAD|SNAPSHOT|UPDATED DAILY|MAY BE OUT OF DATE/i],
       ['File missing (404)', null, 404, /COULD NOT LOAD/i],
+      ['Server error (500)', 'oops', 500, /COULD NOT LOAD/i],
       ['File is not JSON', 'Just a moment...', 200, /COULD NOT LOAD/i]
     ];
     for (const [name, body, status, expect] of scenarios) {
-      const { ctx, page: p, log } = await open({
-        patch: live,
-        route: (pg) => pg.route(/leetcode\.json/, (r) => r.fulfill(status === 404 ? { status: 404, body: 'nope' } : { status, contentType: 'application/json', body: typeof body === 'string' ? body : JSON.stringify(body) }))
-      });
+      const { ctx, page: p, log } = await open({ route: jsonRoute(status, body) });
       await wait(p, 700);
       const r = await read(p);
       check(G, `${name}: label reads ${expect}`, expect.test(r.status), r.status);
-      check(G, `${name}: the card still shows complete figures`, /\d{3}/.test(r.body) && (await count(p, '.rc-card')) === 1);
-      check(G, `${name}: no page errors`, log.errors.filter((e) => !/404|Failed to load resource/.test(e)).length === 0, log.errors.join(' | '));
+      check(G, `${name}: the card still shows complete figures`, /\d{3}/.test(r.body) && (await count(p, '.rc-card')) === 1 && showsAll(r.body, fileData) , r.body.replace(/\s+/g, ' ').slice(0, 160));
+      if (/COULD NOT LOAD|REFRESH FAILED|SNAPSHOT/i.test(r.status)) check(G, `${name}: the label is never "updated daily"`, !/UPDATED DAILY FROM/i.test(r.status), r.status);
+      check(G, `${name}: no page errors`, log.errors.filter((e) => !/40\d|50\d|Failed to load resource/.test(e)).length === 0, log.errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      // Network failure and a request that never answers
+      const { ctx, page: p, log } = await open({ route: (pg) => pg.route(/leetcode\.json/, (r) => r.abort('failed')) });
+      await wait(p, 700);
+      const r = await read(p);
+      check(G, 'Offline or blocked request: label reads COULD NOT LOAD, snapshot figures stay', /COULD NOT LOAD/i.test(r.status) && showsAll(r.body, fileData), r.status);
+      check(G, 'Offline or blocked request: no uncaught errors', log.errors.filter((e) => !/Failed to load resource|net::ERR/.test(e)).length === 0, log.errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      // The loading state: the answer is slow, the card shows a loading label and the snapshot figures, then updates.
+      let release;
+      const gate = new Promise((res) => { release = res; });
+      const { ctx, page: p } = await open({ route: (pg) => pg.route(/leetcode\.json/, async (r) => { await gate; await r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(synced(3)) }); }) });
+      const during = await read(p);
+      check(G, 'Loading state: while the file is on its way the card shows a loading label, not "updated daily"', /LOADING|CHECKING|FETCH|UPDATING|SNAPSHOT/i.test(during.status) && !/UPDATED DAILY FROM/i.test(during.status), during.status);
+      release(); await wait(p, 700);
+      const after = await read(p);
+      check(G, 'Loading state: once the file arrives the label changes to "updated daily"', /UPDATED DAILY FROM LEETCODE/i.test(after.status), after.status);
       await ctx.close();
     }
   }
@@ -364,6 +443,57 @@ try {
     check(G, `Longest main-thread task ${Math.round(m.m.longMax)} ms (budget 250 ms)`, m.m.longMax < 250);
     check(G, `${m.reqs} requests, ${(m.bytes / 1048576).toFixed(2)} MB transferred on first load`, m.reqs < 80 && m.bytes < 4 * 1048576);
     await ctx2.close();
+  }
+
+  // ------------------------------------------------------------------ 7b. GitHub Pages project path
+  {
+    // GitHub Pages serves a project site from /<repository name>/. This serves dist/ under the same kind of path, with
+    // nothing at the server root, so any absolute path (/assets/..., /leetcode.json) would fail.
+    const G = 'GitHub Pages project path';
+    const PREFIX = '/tdshanmmayi-portfolio/';
+    const dist = path.join(root, 'dist');
+    const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
+    const srv = http.createServer((req, res) => {
+      const u = decodeURIComponent(req.url.split('?')[0]);
+      if (!u.startsWith(PREFIX)) { res.writeHead(404); res.end('not found'); return; }
+      let f = path.join(dist, u.slice(PREFIX.length) || 'index.html');
+      if (f.endsWith(path.sep)) f = path.join(f, 'index.html');
+      if (!f.startsWith(dist)) { res.writeHead(403); res.end(); return; }
+      fs.readFile(f, (err, data) => { if (err) { res.writeHead(404); res.end('not found'); return; } res.writeHead(200, { 'content-type': types[path.extname(f)] || 'application/octet-stream' }); res.end(data); });
+    });
+    await new Promise((r) => srv.listen(0, '127.0.0.1', r));
+    const pbase = `http://127.0.0.1:${srv.address().port}${PREFIX}`;
+    const real = JSON.parse(fs.readFileSync(path.join(dist, 'leetcode.json'), 'utf8'));
+    const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
+    check(G, 'index.html uses only relative asset paths (./assets, ./favicon.svg)', !/(src|href)="\/[^/]/.test(html) && /src="\.\/assets\//.test(html), (html.match(/(src|href)="[^"]*"/g) || []).join(' '));
+    for (const hash of ['', '#/lab', '#/studio', '#/backstage', '#/work', '#/work/foodbridge', '#/work/smartcrutch', '#/work/campus-expert', '#/work/password-generator']) {
+      const { ctx, page: p, log } = await open({ base: pbase, hash, route: (pg) => pg.clock.setFixedTime(new Date(Date.parse(real.fetchedAt) + 4 * 3600e3)) });
+      await scrollThrough(p);
+      check(G, `${PREFIX}${hash || '#/'}: loads with no errors, no warnings and no failed or 404 requests`, log.errors.length === 0 && log.failed.length === 0 && log.warnings.length === 0, [...log.errors, ...log.failed, ...log.warnings].join(' | '));
+      check(G, `${PREFIX}${hash || '#/'}: every request stays on the project path`, log.requests.every((u) => !u.startsWith(new URL(pbase).origin) || u.startsWith(pbase)), log.requests.filter((u) => u.startsWith(new URL(pbase).origin) && !u.startsWith(pbase)).join(' | '));
+      if (!hash) {
+        const imgs = await p.evaluate(() => [...document.images].map((i) => i.complete && i.naturalWidth > 0));
+        check(G, `All ${imgs.length} images decoded under the project path`, imgs.length > 10 && imgs.every(Boolean));
+        const fonts = await p.evaluate(async () => { await document.fonts.ready; return ['Bricolage Grotesque', 'Caveat', 'Space Mono', 'Instrument Serif', 'Big Shoulders Display'].map((f) => document.fonts.check('700 16px "' + f + '"')); });
+        check(G, 'All five font families load under the project path', fonts.every(Boolean), fonts.join(','));
+        const r = await p.evaluate(() => ({ status: document.querySelector('.lc-status').textContent.trim().replace(/\s+/g, ' '), body: document.querySelector('.rc-card').innerText }));
+        const expectedRealStatus = real.origin === 'snapshot'
+          ? /SNAPSHOT, NOT LIVE/i
+          : /UPDATED DAILY FROM LEETCODE/i;
+        check(G, `The report card loads ./leetcode.json from the project path and shows the correct ${real.origin} status`, expectedRealStatus.test(r.status) && log.requests.some((u) => u === pbase + 'leetcode.json'), r.status);
+        check(G, 'The report card figures equal the JSON file', [real.solved, real.easy, real.medium, real.hard, real.activeDays, real.submissions, real.maxStreak].every((n) => new RegExp('(^|\\D)' + n + '(\\D|$)').test(r.body)));
+      }
+      if (hash === '#/work/foodbridge') check(G, 'Deep link to a case study opens it', (await count(p, '.ds')) >= 1);
+      if (hash === '#/studio') check(G, 'Deep link to the studio keeps the hash', (await hashOf(p)) === '#/studio', await hashOf(p));
+      await ctx.close();
+    }
+    {
+      const { ctx, page: p } = await open({ base: pbase });
+      const abs = await p.evaluate(async () => ({ root: (await fetch('/leetcode.json')).status, rel: (await fetch('./leetcode.json')).status }));
+      check(G, 'Sanity check of the test itself: /leetcode.json (absolute) would 404 here, ./leetcode.json works', abs.root === 404 && abs.rel === 200, JSON.stringify(abs));
+      await ctx.close();
+    }
+    await new Promise((r) => srv.close(r));
   }
 
   // ------------------------------------------------------------------ 8. Development build: React warnings

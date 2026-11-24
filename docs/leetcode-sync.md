@@ -5,14 +5,14 @@
 ## What is in this repository
 
 ```
-.github/workflows/leetcode-sync.yml     Action: fetch, validate, commit public/leetcode.json (manual until the daily schedule is switched on)
+.github/workflows/leetcode-sync.yml     Action: fetch, validate, commit public/leetcode.json (daily at 06:00 IST = 00:30 UTC, and on demand)
 .github/workflows/deploy-pages.yml      builds and publishes the site (manual-only until switched on; see the file header)
 .github/workflows/ci.yml                lint, tests, build on pull requests
 scripts/leetcode-sync.mjs               fetch, validate, write public/leetcode.json (no npm packages)
 scripts/leetcode-sync.test.mjs          offline tests of the sync, with a fake LeetCode server
 scripts/data.test.mjs                   checks the data file, the built-in snapshot and the "not live yet" switch
 scripts/fixtures/                       frozen real responses (22 and 24 Nov 2026) and a frozen seed for the tests
-public/leetcode.json                    the data file (starts as the 24 Nov 2026 snapshot read from the public profile)
+public/leetcode.json                    the data file (written by the Action; first verified sync 24 Nov 2026)
 src/data/leetcode.js                    the built-in snapshot and the liveUrl switch
 ```
 
@@ -20,7 +20,7 @@ No secrets, tokens or passwords anywhere. The sync workflow uses the built-in `G
 
 ## How it works
 
-1. When you press "Run workflow", and once a day (02:41 UTC) after the schedule is switched on (see "Setup"), GitHub runs the Action.
+1. When you press "Run workflow", and every day at 00:30 UTC (06:00 IST), GitHub runs the Action.
 2. The Action first runs the offline tests. If the script is broken, it stops before touching any data.
 3. The script asks LeetCode's public GraphQL endpoint for Shanmayi's profile, with a 20-second timeout and up to 3 tries.
 4. Every answer is checked before anything is saved (see "Validation" below).
@@ -105,29 +105,42 @@ An open page checks the file again every 60 minutes and moves the "hours ago" te
 5. **Protected branch?** If `main` only accepts pull requests, the sync cannot push to it. Allow GitHub Actions to bypass the rule for this branch, or the daily commit will fail.
 6. **Run the sync once by hand:** Actions tab > "Sync LeetCode stats" > Run workflow.
 7. **Verify the first run** (next section). Only when every check passes, go on.
-8. **Switch the daily schedule on:** in `.github/workflows/leetcode-sync.yml`, remove the leading `# ` from the two `schedule` lines, commit and push.
-9. **Optional, GitHub Pages:** to deploy automatically on every push and after every sync, remove the leading `# ` from the two blocks under `on:` in `.github/workflows/deploy-pages.yml`. Then go to "Switch the page on".
+8. **Daily schedule:** already on (`cron: '30 0 * * *'`, 00:30 UTC = 06:00 IST). To move the time, change that line; IST is UTC+5:30 and does not change with seasons.
+9. **GitHub Pages:** the deploy workflow (`deploy-pages.yml`) runs on every push to `main`, after every "Sync LeetCode stats" run, and by hand. Turn Pages on first: Settings > Pages > Build and deployment > Source > **GitHub Actions**. Then start the first deployment: Actions tab > "Deploy to GitHub Pages" > Run workflow (branch `main`).
 
-## Switch the page on
+## The page switch
 
-Do this only after the verification below has passed in the real repository.
+`liveUrl` in `src/data/leetcode.js` is `'./leetcode.json'`. Keep the leading `./`: a project Pages site lives under `/tdshanmmayi-portfolio/`, so `/leetcode.json` would point at the wrong place. Set it to `''` to return the card to dated snapshot mode.
 
-1. In `src/data/leetcode.js` set `liveUrl: './leetcode.json'`. Keep the leading `./`, it works from any hosting path.
-2. Commit and push. The deploy workflow publishes it.
-3. Open the live site. The card should say "UPDATED DAILY FROM LEETCODE / LAST UPDATED ... AGO". If it says "COULD NOT LOAD THE DAILY UPDATE", the file is not being served. Set `liveUrl` back to `''` and re-check step 5 of the verification.
+Open the live site. The card should say "UPDATED DAILY FROM LEETCODE / LAST UPDATED ... AGO". If it says "COULD NOT LOAD THE DAILY UPDATE", the file is not being served. Re-check step 5 of the verification.
 
-## How to verify the first automated refresh
+## Verify the live site
 
-All of these should be true:
+After the first deployment:
 
-1. **Actions tab:** the run has a green tick. The step "Fetch public LeetCode data" printed a line starting with `OK:` and the solved count.
-2. **Run summary** (bottom of the run page): "Last successful refresh (fetchedAt)" is a time from that run, and "This attempt" says `ok`.
-3. **Commit history:** a new commit by `github-actions[bot]` named "LeetCode stats refreshed".
-4. **The file:** open `public/leetcode.json` on GitHub. `origin` is `sync`, `fetchedAt` is from that run, `lastAttempt.ok` is `true`, and the numbers match the profile page at https://leetcode.com/u/ShanmayiShree/.
-5. **The deployed file:** after the 'Deploy to GitHub Pages' run that follows the sync, open `https://<your site>/leetcode.json` in a browser and check the same `fetchedAt`.
-6. **The next day:** the scheduled run has happened on its own (Actions tab shows an event called "schedule"), and `fetchedAt` moved forward.
+1. Open the "Deploy to GitHub Pages" run. Both the build and the deploy steps are green. The run page shows the address under "github-pages".
+2. Open `https://shan456786.github.io/tdshanmmayi-portfolio/`. The page loads with its images and fonts. The hash links work, for example `.../tdshanmmayi-portfolio/#/work` and `.../#/studio`.
+3. Open `https://shan456786.github.io/tdshanmmayi-portfolio/leetcode.json` and compare `fetchedAt` with `public/leetcode.json` on `main`. They match.
+4. Scroll to the report card. It says "UPDATED DAILY FROM LEETCODE / LAST UPDATED ... AGO" and the numbers match the JSON file. If it says "COULD NOT LOAD THE DAILY UPDATE", the file is not being served: check step 3.
+5. If you see an older page after a deploy, hard refresh (Ctrl+F5). GitHub Pages caches files for a few minutes.
 
-If the first run fails, the summary and the red step show the reason. The file keeps the 24 Nov snapshot and the page, if switched on, keeps saying "SNAPSHOT, NOT LIVE".
+## Verify the daily LeetCode updates
+
+The schedule is 00:30 UTC, which is 06:00 IST. GitHub can start it a few minutes late. Check these the next morning, and again after a few days:
+
+1. **Actions tab > "Sync LeetCode stats":** a new run with the event "schedule" at about 06:00 IST, green, with a line starting `OK:` in the step "Fetch public LeetCode data".
+2. **Commit history:** a new commit by `github-actions[bot]` named "LeetCode stats refreshed". If LeetCode had no new activity, only the timestamps change. That is normal.
+3. **`public/leetcode.json` on `main`:** `origin` is `sync`, `fetchedAt` is from that run, `lastAttempt.ok` is `true`.
+4. **Actions tab > "Deploy to GitHub Pages":** a run with the event "workflow_run" that started after the sync run and is green.
+5. **The live site:** `https://shan456786.github.io/tdshanmmayi-portfolio/leetcode.json` shows the new `fetchedAt`, and the report card says "LAST UPDATED ... HOURS AGO".
+6. **If the sync fails:** the run is red and GitHub emails you. The old numbers stay. The deploy still runs, and the card says "LATEST DAILY REFRESH FAILED ... SHOWING DATA FROM <date>". The next good run clears it. If the workflow stops running altogether, so no failure is recorded, the card says "MAY BE OUT OF DATE" once the data is 36 hours old.
+7. **If nothing runs for days:** GitHub switches off scheduled workflows in a public repository after 60 days without repository activity. Open Actions, choose "Sync LeetCode stats" and press "Enable workflow" if you see that banner.
+
+## How the first manual refresh was verified (24 Nov 2026)
+
+1. Two manual runs of "Sync LeetCode stats" on `main` finished green, with an `OK:` line.
+2. Two commits by `github-actions[bot]` changed `public/leetcode.json`.
+3. The committed file has `origin: "sync"`, `fetchedAt: 2026-11-24T16:31:52.718Z`, `lastAttempt.ok: true`, and passes the same validation as the sync script: 254 solved (78 easy, 135 medium, 41 hard), 130 active days, 315 submissions, longest streak 77.
 
 ## Run the tests yourself
 
@@ -140,8 +153,8 @@ The sync tests start a local server that plays the part of LeetCode, so the real
 ## Known limits
 
 - `leetcode.com/graphql` is unofficial and undocumented. LeetCode can change it or block requests from GitHub's servers. If that happens the run fails, the previous data stays, and the card says so.
-- Whether LeetCode accepts requests from GitHub's servers can only be known after the first real run.
-- GitHub can start scheduled runs late when it is busy. Daily is the target, not an exact time.
+- LeetCode accepted the first manual run from GitHub's servers (24 Nov 2026). It can still change its mind later.
+- GitHub can start scheduled runs late when it is busy. Daily at about 06:00 IST is the target, not an exact time.
 - In a public repo, GitHub disables scheduled workflows after 60 days without repository activity. The daily data commits may count as activity, but GitHub does not say clearly whether commits made by the Action itself do. If the workflow gets disabled, re-enable it in the Actions tab.
 - The page treats data older than 36 hours as "may be out of date". One late or failed run is enough to show that label, which is intended.
 - The deploy workflow runs after the sync workflow finishes (`workflow_run`). That only works once both files are on the default branch.

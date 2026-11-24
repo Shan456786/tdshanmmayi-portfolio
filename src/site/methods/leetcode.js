@@ -4,6 +4,7 @@ export const leetcodeMethods = {
     const n = (x) => Number.isInteger(x) && x >= 0;
     const day = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x) && !isNaN(Date.parse(x + 'T00:00:00Z'));
     if (!d || typeof d !== 'object' || d.schema !== 1) return false;
+    if (d.user !== LEETCODE.user) return false;
     if (!['solved', 'easy', 'medium', 'hard', 'submissions', 'activeDays', 'maxStreak'].every((k) => n(d[k]))) return false;
     if (d.easy + d.medium + d.hard !== d.solved || d.maxStreak > d.activeDays) return false;
     if (isNaN(Date.parse(d.fetchedAt)) || !day(d.calStart)) return false;

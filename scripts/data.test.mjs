@@ -23,11 +23,37 @@ test('the snapshot built into the page is internally consistent', () => {
   assert.ok(!Number.isNaN(Date.parse(s.fetchedAt)));
 });
 
-test('the page stays in dated snapshot mode until the automation has been verified', () => {
-  // Switching this on is a manual step, documented in docs/leetcode-sync.md, after one verified run in the real repository.
-  assert.ok(LEETCODE.liveUrl === '' || LEETCODE.liveUrl === './leetcode.json', 'liveUrl must be empty or ./leetcode.json');
+test('the report card reads ./leetcode.json (relative, so it works under the project Pages path)', () => {
+  assert.equal(LEETCODE.liveUrl, './leetcode.json');
+});
+
+test('the sync workflow runs daily at 06:00 IST (00:30 UTC), keeps the manual button, and asks for little', async () => {
+  const yml = await readFile(fileURLToPath(new URL('../.github/workflows/leetcode-sync.yml', import.meta.url)), 'utf8');
+  const live = yml.split('\n').filter((l) => !l.trim().startsWith('#')).join('\n');
+  assert.match(live, /^on:\n {2}schedule:\n {4}- cron: '30 0 \* \* \*'/m, 'daily schedule at 00:30 UTC');
+  assert.match(live, /^ {2}workflow_dispatch:/m, 'manual run kept');
+  assert.match(live, /^permissions: \{\}/m, 'no permissions by default');
+  assert.equal((live.match(/contents: write/g) || []).length, 1, 'only the one sync job may write');
+  assert.ok(!/secrets\./.test(live), 'no repository secrets');
+  assert.ok(!/GH_TOKEN|PERSONAL|PAT\b/.test(live), 'no personal access token');
 });
 
 test('the data file is never older than the snapshot in the page', () => {
   assert.ok(Date.parse(file.fetchedAt) >= Date.parse(LEETCODE.snapshot.fetchedAt));
+});
+
+test('the deploy workflow runs on push to main, after the LeetCode sync, and by hand, with only the Pages permissions', async () => {
+  const yml = await readFile(fileURLToPath(new URL('../.github/workflows/deploy-pages.yml', import.meta.url)), 'utf8');
+  const live = yml.split('\n').filter((l) => !l.trim().startsWith('#')).join('\n');
+  assert.match(live, /^ {2}push:\n {4}branches: \[main\]/m, 'push to main');
+  assert.match(live, /^ {2}workflow_run:\n {4}workflows: \['Sync LeetCode stats'\]\n {4}types: \[completed\]/m, 'after the sync workflow');
+  assert.match(live, /^ {2}workflow_dispatch:/m, 'manual run kept');
+  assert.match(live, /^permissions: \{\}/m, 'no permissions by default');
+  assert.match(live, /contents: read/);
+  assert.match(live, /pages: write/);
+  assert.match(live, /id-token: write/);
+  assert.ok(!/contents: write/.test(live), 'the deploy job never writes to the repository');
+  const sync = await readFile(fileURLToPath(new URL('../.github/workflows/leetcode-sync.yml', import.meta.url)), 'utf8');
+  const name = (sync.match(/^name: (.+)$/m) || [])[1];
+  assert.equal(name, 'Sync LeetCode stats', 'the deploy trigger names the sync workflow exactly');
 });

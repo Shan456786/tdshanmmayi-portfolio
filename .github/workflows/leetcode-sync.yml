@@ -8,12 +8,12 @@ name: Sync LeetCode stats
 # the failure (so the page can say so), and this run is marked failed so
 # GitHub notifies you.
 
-# STATUS: manual only for now. The daily schedule is switched off until one manual run has been checked in the
-# real repository (see docs/leetcode-sync.md). To switch the daily schedule on, remove the leading "# " from the
-# two schedule lines below and push.
+# STATUS: daily schedule is ON. It runs at 00:30 UTC, which is 06:00 India Standard Time (IST is UTC+5:30, no
+# daylight saving). GitHub can start scheduled runs a few minutes late when it is busy. The manual "Run workflow"
+# button stays available. The first manual run was checked in the real repository before this was switched on.
 on:
-  # schedule:
-  #   - cron: '41 2 * * *'   # daily at 02:41 UTC. GitHub can start scheduled runs late.
+  schedule:
+    - cron: '30 0 * * *'    # daily at 00:30 UTC = 06:00 IST
   workflow_dispatch:        # "Run workflow" button in the Actions tab
 
 # Nothing by default. The job below asks only for what it needs.
