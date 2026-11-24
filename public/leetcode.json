@@ -3,9 +3,13 @@
   "user": "ShanmayiShree",
   "profileUrl": "https://leetcode.com/u/ShanmayiShree/",
   "source": "leetcode.com/graphql (public, unofficial)",
-  "origin": "snapshot",
-  "fetchedAt": "2026-11-24T13:35:52Z",
-  "lastAttempt": null,
+  "origin": "sync",
+  "fetchedAt": "2026-11-24T16:31:23.001Z",
+  "lastAttempt": {
+    "at": "2026-11-24T16:31:23.001Z",
+    "ok": true,
+    "error": null
+  },
   "solved": 254,
   "easy": 78,
   "medium": 135,
