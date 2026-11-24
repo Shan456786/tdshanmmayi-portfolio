@@ -1,0 +1,16 @@
+<a class="skip" href="#main" onClick="{{skipGo}}">Skip to content</a>
+
+<div class="grain" aria-hidden="true" style="opacity: {{grain}}"></div>
+
+<div class="cur" ref="{{setCursor}}" aria-hidden="true"><div class="cur-in"><span class="cur-lab"></span></div></div>
+
+<nav class="nv c0" aria-label="Chapters" inert="{{bgInert}}">
+<button class="nv-arr" type="button" onClick="{{navPrev}}" aria-label="Previous chapter" data-cur="PREV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19"></path></svg></button>
+<button class="nv-cur" type="button" onClick="{{menuOpen}}" aria-expanded="{{menuExp}}" aria-haspopup="dialog" data-cur="MENU">
+<span class="nv-n">00</span>
+<span class="nv-t">Opening</span>
+<span class="nv-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+</button>
+<button class="nv-arr" type="button" onClick="{{navNext}}" aria-label="Next chapter" data-cur="NEXT"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19"></path></svg></button>
+<span class="nv-bar" aria-hidden="true"><i ref="{{setBar}}"></i></span>
+</nav>

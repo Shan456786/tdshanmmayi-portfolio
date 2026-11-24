@@ -1,0 +1,56 @@
+<section tabindex="-1" class="chap lx" data-vis="lab" id="lab" data-ch="4" aria-labelledby="lx-h">
+<header class="cho">
+<span class="cho-n" aria-hidden="true">04</span>
+<p class="cho-k">CHAPTER FOUR / CURRENTLY EXPLORING</p>
+<h2 class="lx-h" id="lx-h">The learning <em>lab.</em></h2>
+<p class="lx-sub">Two zones. <b class="b1">On the bench</b>: what I'm actively learning right now. <b class="b2">On the shelf</b>: what I'm curious about and exploring next. Pick anything up to read its log.</p>
+</header>
+
+<div class="lx-room">
+<span class="lx-diag d1" aria-hidden="true"><svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="22"></rect><rect x="20" y="40" width="160" height="22"></rect><rect x="30" y="70" width="140" height="22"></rect><rect x="40" y="100" width="120" height="22"></rect></svg></span>
+<span class="lx-diag d2" aria-hidden="true"><svg viewBox="0 0 200 140"><circle cx="100" cy="20" r="10"></circle><circle cx="50" cy="70" r="10"></circle><circle cx="150" cy="70" r="10"></circle><circle cx="25" cy="120" r="10"></circle><circle cx="75" cy="120" r="10"></circle><circle cx="125" cy="120" r="10"></circle><path d="M93 27 L57 63 M107 27 L143 63 M45 79 L30 111 M55 79 L70 111 M145 79 L130 111"></path></svg></span>
+<span class="lx-diag d3" aria-hidden="true"><svg viewBox="0 0 200 140"><circle cx="30" cy="70" r="12"></circle><circle cx="100" cy="30" r="12"></circle><circle cx="100" cy="110" r="12"></circle><circle cx="170" cy="70" r="12"></circle><path d="M42 66 L88 34 M42 74 L88 106 M112 34 L158 66 M112 106 L158 74 M100 42 L100 98"></path></svg></span>
+
+<div class="bench">
+<p class="zone-k"><i class="lamp on"></i>ON THE BENCH <span>actively learning</span></p>
+<div class="bench-top" role="tablist" aria-label="On the bench, actively learning">
+<sc-for list="{{learning}}" as="m" hint-placeholder-count="4">
+<button class="{{m.cls}}" type="button" role="tab" id="{{m.id}}" aria-selected="{{m.on}}" aria-controls="lab-log" tabindex="{{m.ti}}" onClick="{{m.pick}}" onKeyDown="{{m.key}}" data-cur="LOG">
+<span class="{{m.obj}}" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+<span class="md-t">{{m.t}}</span>
+<span class="md-s">LEARNING NOW</span>
+</button>
+</sc-for>
+</div>
+<span class="bench-edge" aria-hidden="true"></span>
+</div>
+
+<div class="shelf">
+<p class="zone-k"><i class="lamp"></i>ON THE SHELF <span>curious about, next</span></p>
+<div class="shelf-row" role="tablist" aria-label="On the shelf, curious about next">
+<sc-for list="{{curious}}" as="m" hint-placeholder-count="4">
+<button class="{{m.cls}}" type="button" role="tab" id="{{m.id}}" aria-selected="{{m.on}}" aria-controls="lab-log" tabindex="{{m.ti}}" onClick="{{m.pick}}" onKeyDown="{{m.key}}" data-cur="LOG">
+<span class="jar" aria-hidden="true"><span class="jar-lid"></span><span class="{{m.obj}}"><i></i><i></i><i></i><i></i></span></span>
+<span class="md-t">{{m.t}}</span>
+<span class="md-s">CURIOUS ABOUT</span>
+</button>
+</sc-for>
+</div>
+<span class="shelf-plank" aria-hidden="true"></span>
+</div>
+
+<aside class="{{logCls}}" id="lab-log" role="tabpanel" aria-labelledby="{{labTabId}}" tabindex="0" aria-live="polite">
+<span class="clip" aria-hidden="true"></span>
+<p class="log2-k">EXPERIMENT LOG / {{logNo}}</p>
+<h3 class="log2-h">{{logT}}</h3>
+<p class="{{logPill}}">{{logStatus}}</p>
+<dl class="log2-dl">
+<div><dt>Zone</dt><dd>{{logZone}}</dd></div>
+<div><dt>Logged</dt><dd>{{labUpdated}}</dd></div>
+<div><dt>Evidence</dt><dd>{{logEvidence}}</dd></div>
+<div><dt>Connects to</dt><dd>{{logLink}}</dd></div>
+</dl>
+<p class="log2-foot">Progress is only shown where there is real data behind it.</p>
+</aside>
+</div>
+</section>

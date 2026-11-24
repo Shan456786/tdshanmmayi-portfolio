@@ -1,0 +1,35 @@
+/* motion */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drop{0%{transform:translateY(-.9em) rotate(-12deg);opacity:0}100%{transform:none;opacity:1}}
+@keyframes marq{to{transform:translateX(-50%)}}
+@keyframes hue{to{filter:hue-rotate(360deg) saturate(1.4)}}
+@keyframes draw{from{stroke-dashoffset:900}to{stroke-dashoffset:0}}
+@keyframes rv{from{opacity:0;translate:0 70px;rotate:x 18deg}to{opacity:1;translate:0 0;rotate:x 0deg}}
+@keyframes flIn{from{opacity:0}}
+@keyframes bob{0%,100%{transform:translateY(-6px)}50%{transform:translateY(8px)}}
+@keyframes floorBob{0%,100%{transform:scaleX(.92);opacity:.8}50%{transform:scaleX(1.05);opacity:1}}
+@keyframes recede{to{transform:translateY(-70px) rotateX(16deg) scale(.9)}}
+@keyframes place{from{transform:translateY(-22px) rotate(-5deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes settle{0%{transform:translateY(40px) scale(1.03);opacity:0}100%{transform:none;opacity:1}}
+@keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:rotate(-1.5deg);opacity:1}}
+@keyframes twinkle{0%,100%{transform:rotate(-6deg) scale(.94)}50%{transform:rotate(8deg) scale(1.04)}}
+@keyframes twirl{from{transform:rotate(0) scale(1.15)}to{transform:rotate(360deg) scale(1.15)}}
+@keyframes introOut{to{transform:translateY(-104%);visibility:hidden}}
+@keyframes wf{0%,100%{opacity:0;transform:translateY(16px)}14%,86%{opacity:1;transform:none}}
+@keyframes wfl{0%{opacity:0;transform:translateY(16px)}14%,100%{opacity:1;transform:none}}
+@keyframes bar{from{width:0}to{width:100%}}
+@keyframes eqb{from{height:20%}to{height:100%}}
+@keyframes wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-.18em)}}
+.spin{animation:spin 26s linear infinite}
+@supports (animation-timeline: view()){
+  .rv{animation:rv linear both;animation-timeline:view();animation-range:entry 0% cover 26%;transform-origin:50% 100%}
+  .recede{animation:recede linear both;animation-timeline:view();animation-range:exit 0% exit 100%}
+}
+.root.calm *,.root.calm *::before,.root.calm *::after{animation:none !important;transition:none !important}
+.root.calm .intro{display:none}
+@media (prefers-reduced-motion: reduce){
+  .root *,.root *::before,.root *::after{animation:none !important;transition-duration:.01s !important}
+  .root .intro{display:none}
+  html{scroll-behavior:auto}
+}
+

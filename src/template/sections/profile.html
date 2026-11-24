@@ -1,0 +1,60 @@
+<section tabindex="-1" class="chap pf" data-vis="about" id="about" data-ch="1" aria-labelledby="pf-h">
+<header class="cho">
+<span class="cho-n" aria-hidden="true">01</span>
+<p class="cho-k">CHAPTER ONE / PROFILE</p>
+</header>
+
+<div class="pf-spread">
+<div class="pf-name" ref="{{setNameEl}}">
+<h2 class="pf-h" id="pf-h" aria-label="Shanmayi Shree Tadala">
+<span class="pn pn1" aria-hidden="true"><span class="pl">S</span><span class="pl">H</span><span class="pl">A</span><span class="pl">N</span><span class="pl">M</span><span class="pl">A</span><span class="pl">Y</span><span class="pl">I</span></span>
+<span class="pn pn2" aria-hidden="true"><span class="pl s">S</span><span class="pl s">h</span><span class="pl s">r</span><span class="pl s">e</span><span class="pl s">e</span></span>
+<span class="pn pn3" aria-hidden="true"><span class="pl">T</span><span class="pl">A</span><span class="pl">D</span><span class="pl">A</span><span class="pl">L</span><span class="pl">A</span></span>
+</h2>
+<p class="pf-sig"><span>signs her work as</span><b>Tdshanmmayi</b><svg class="doodle" viewBox="0 0 220 30" aria-hidden="true"><path d="M4 18 C 40 30, 90 4, 130 16 S 200 24, 216 8"></path></svg></p>
+<p class="pf-hint" aria-hidden="true">(move across the letters)</p>
+<figure class="pf-av arw"><div class="ar"><img loading="lazy" decoding="async" class="ar-b" src="{{asset.readingBack}}" alt="" draggable="false"><img loading="lazy" decoding="async" class="ar-f" src="{{asset.readingFlat}}" alt="Screenprint-style illustration of Shanmayi reading a notebook, pencil in hand" draggable="false"><img loading="lazy" decoding="async" class="ar-i" src="{{asset.readingInk}}" alt="" draggable="false"></div></figure>
+</div>
+
+<div class="pf-deck">
+<p class="pf-stand">Hi, I'm Shanmayi. I'm a second-year cybersecurity student at VIT-AP, learning one problem, one command and one concept at a time. I love the places where engineering meets imagination.</p>
+<aside class="pf-facts" aria-label="The facts">
+<p class="pf-fk">THE FACTS</p>
+<dl>
+<div><dt>Studying</dt><dd>B.Tech in Cybersecurity</dd></div>
+<div><dt>At</dt><dd>VIT-AP University, Andhra Pradesh</dd></div>
+<div><dt>Year</dt><dd>Second year, 2025 to present</dd></div>
+<div><dt>Codes in</dt><dd>Python, Java, JavaScript, TypeScript</dd></div>
+<div><dt>Certified</dt><dd>Cisco Networking Academy, Introduction to Cybersecurity</dd></div>
+<div><dt>Hands-on</dt><dd>TryHackMe, {{thmRooms}} rooms completed <small>as of {{thmAsOf}}</small></dd></div>
+<div><dt>Practice</dt><dd><a href="#leetcode" data-cur="GO">LeetCode, {{lc.solved}} solved</a> <small>{{lc.factWhen}}</small></dd></div>
+<div><dt>Off the clock</dt><dd>Dancing, drawing, reading</dd></div>
+</dl>
+</aside>
+</div>
+</div>
+
+<div class="pf-lower">
+<div class="pf-map">
+<p class="pf-sk">CURIOSITY MAP <span>hover a node</span></p>
+<div class="{{mapCls}}">
+<svg class="cm-lines" viewBox="0 0 600 420" preserveAspectRatio="none" aria-hidden="true">
+<path class="cl l0" d="M300 210 L120 90"></path><path class="cl l1" d="M300 210 L470 70"></path><path class="cl l2" d="M300 210 L520 230"></path><path class="cl l3" d="M300 210 L430 370"></path><path class="cl l4" d="M300 210 L170 360"></path><path class="cl l5" d="M300 210 L70 240"></path><path class="cl l6" d="M300 210 L300 40"></path>
+<path class="cl x" d="M120 90 L70 240"></path><path class="cl x" d="M470 70 L520 230"></path><path class="cl x" d="M430 370 L170 360"></path>
+</svg>
+<span class="cm-core" aria-hidden="true">me</span>
+<sc-for list="{{nodes}}" as="nd" hint-placeholder-count="7">
+<a class="{{nd.cls}}" href="{{nd.href}}" style="left: {{nd.x}}%; top: {{nd.y}}%" onMouseEnter="{{nd.on}}" onFocus="{{nd.on}}" onMouseLeave="{{mapOff}}" onBlur="{{mapOff}}" data-cur="GO"><span>{{nd.t}}</span></a>
+</sc-for>
+</div>
+</div>
+<div class="pf-trail">
+<p class="pf-sk">SO FAR <span>only the real milestones</span></p>
+<ol class="tr-list">
+<sc-for list="{{trail}}" as="t" hint-placeholder-count="7">
+<li class="{{t.cls}}"><span class="tr-when">{{t.when}}</span><span class="tr-what">{{t.what}}</span><span class="tr-note">{{t.note}}</span></li>
+</sc-for>
+</ol>
+</div>
+</div>
+</section>

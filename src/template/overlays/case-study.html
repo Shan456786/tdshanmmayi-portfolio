@@ -1,0 +1,341 @@
+<sc-if value="{{dsOpen}}" hint-placeholder-val="{{ false }}">
+<div class="{{ds.wrap}}" role="dialog" aria-modal="true" aria-labelledby="ds-h" tabindex="-1" onKeyDown="{{dsKey}}" style="--pc: {{ds.c}}; --pf: {{ds.fg}}">
+<div class="{{ds.cls}}">
+<header class="ds-top">
+<span class="ds-k">CASE STUDY {{ds.n}} / {{ds.kicker}}</span>
+<div class="ds-nav">
+<button class="ds-b" type="button" onClick="{{toArchive}}" data-cur="ARCHIVE">All projects</button>
+<button class="ds-b" type="button" onClick="{{dsPrev}}" data-cur="PREV" aria-label="{{ds.prevAria}}">Prev</button>
+<button class="ds-b" type="button" onClick="{{dsNext}}" data-cur="NEXT" aria-label="{{ds.nextAria}}">Next</button>
+<button class="ds-b x" type="button" onClick="{{dsClose}}" data-cur="CLOSE" aria-label="Close the case study">Close</button>
+</div>
+</header>
+
+<sc-if value="{{ds.isFb}}" hint-placeholder-val="{{ false }}">
+<div class="cs-hero fbh">
+<div class="fbh-l">
+<h2 class="{{ds.tcls}}" id="ds-h" tabindex="-1">{{ds.name}}</h2>
+<p class="cs-deck">{{ds.deck}}</p>
+</div>
+<aside class="fbh-bill" aria-label="Project details">
+<p class="fbh-bk">WAYBILL / {{ds.n}}</p>
+<dl>
+<div><dt>Type</dt><dd>{{ds.type}}</dd></div>
+<div><dt>Started</dt><dd>{{ds.started}}</dd></div>
+<div><dt>Roles in the app</dt><dd>Donor / Receiver / Volunteer / Admin</dd></div>
+<div><dt>Route</dt><dd>Listing to verified handover</dd></div>
+</dl>
+<p class="fbh-stamp" aria-hidden="true">TRACEABLE</p>
+</aside>
+</div>
+</sc-if>
+
+<sc-if value="{{ds.isSc}}" hint-placeholder-val="{{ false }}">
+<div class="cs-hero sch">
+<div class="sch-l">
+<p class="sch-k">DRAWING NO. {{ds.n}} / SIGNAL CHAIN AND DASHBOARD</p>
+<h2 class="{{ds.tcls}}" id="ds-h" tabindex="-1">{{ds.name}}</h2>
+<p class="cs-deck">{{ds.deck}}</p>
+</div>
+<aside class="sch-tb" aria-label="Project details">
+<div><span>PROJECT</span><b>{{ds.name}}</b></div>
+<div><span>TYPE</span><b>{{ds.type}}</b></div>
+<div><span>STARTED</span><b>{{ds.started}}</b></div>
+<div><span>LINK</span><b>USB SERIAL / 115200</b></div>
+<div><span>CADENCE</span><b>1 LINE / 200 MS</b></div>
+</aside>
+<p class="sch-tape" role="note"><b>READ THIS FIRST</b>{{sc.notice}}</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ds.isCe}}" hint-placeholder-val="{{ false }}">
+<div class="cs-hero ceh">
+<div class="ceh-card">
+<p class="ceh-no">CALL NO. {{ds.n}} / {{ds.type}} / {{ds.started}}</p>
+<h2 class="{{ds.tcls}}" id="ds-h" tabindex="-1">{{ds.name}}</h2>
+<p class="cs-deck">{{ds.deck}}</p>
+</div>
+<dl class="ceh-stats">
+<div><dt>Knowledge entries</dt><dd>{{ce.kb.entries}}</dd></div>
+<div><dt>Topics</dt><dd>{{ce.kb.topics}}</dd></div>
+<div><dt>Marked official</dt><dd>{{ce.kb.official}}</dd></div>
+<div><dt>Marked unverified</dt><dd>{{ce.kb.unverified}}</dd></div>
+</dl>
+</div>
+</sc-if>
+
+<sc-if value="{{ds.isPw}}" hint-placeholder-val="{{ false }}">
+<div class="cs-hero pwh">
+<div class="pwh-l">
+<h2 class="{{ds.tcls}}" id="ds-h" tabindex="-1">{{ds.name}}</h2>
+<p class="cs-deck">{{ds.deck}}</p>
+<p class="pwh-meta">{{ds.type}} / started {{ds.started}}</p>
+</div>
+<figure class="pwh-term">
+<div class="pwh-bar" aria-hidden="true"><i></i><i></i><i></i><span>main.py</span></div>
+<pre aria-label="The program's opening lines in a terminal">$ python3 main.py
+========================================
+       SECURE PASSWORD GENERATOR
+========================================
+Enter password length (minimum 4): <span class="pwh-cur">_</span></pre>
+<figcaption>The opening lines, exactly as main.py prints them.</figcaption>
+</figure>
+</div>
+</sc-if>
+
+<nav class="cs-toc" aria-label="In this case study">
+<sc-for list="{{ds.toc}}" as="t" hint-placeholder-count="9"><button class="cs-tb" type="button" onClick="{{t.go}}" data-cur="GO"><b>{{t.n}}</b>{{t.t}}</button></sc-for>
+</nav>
+
+<section class="cs-sec cs-ov" id="cs-1" aria-labelledby="cs-1-h">
+<h3 class="cs-h" id="cs-1-h" tabindex="-1"><span>01</span>Overview</h3>
+<p class="cs-lead">{{ds.overview}}</p>
+</section>
+<div class="cs-pair">
+<section class="cs-sec" id="cs-2" aria-labelledby="cs-2-h">
+<h3 class="cs-h" id="cs-2-h" tabindex="-1"><span>02</span>Problem</h3>
+<p class="cs-p">{{ds.problem}}</p>
+</section>
+<section class="cs-sec" id="cs-3" aria-labelledby="cs-3-h">
+<h3 class="cs-h" id="cs-3-h" tabindex="-1"><span>03</span>My role</h3>
+<p class="cs-p">{{ds.role}}</p>
+</section>
+</div>
+<section class="cs-sec cs-stk" id="cs-4" aria-labelledby="cs-4-h">
+<h3 class="cs-h" id="cs-4-h" tabindex="-1"><span>04</span>Technology stack</h3>
+<div class="cs-stack">
+<sc-for list="{{ds.stack}}" as="g" hint-placeholder-count="3">
+<div class="cs-sg"><p class="cs-sgk">{{g.g}}</p><ul><sc-for list="{{g.items}}" as="i" hint-placeholder-count="5"><li>{{i.t}}</li></sc-for></ul></div>
+</sc-for>
+</div>
+</section>
+
+<sc-if value="{{ds.isFb}}" hint-placeholder-val="{{ false }}">
+<section class="cs-sec" id="cs-5" aria-labelledby="cs-5-h">
+<h3 class="cs-h" id="cs-5-h" tabindex="-1"><span>05</span>Architecture / the rescue route</h3>
+<p class="cs-dg">DIAGRAM / DRAWN FROM THE DATABASE WORKFLOW FUNCTIONS. NOT A SCREENSHOT. PICK A STOP.</p>
+<div class="fb-route" style="--at: {{fb.at}}">
+<div class="fb-line" aria-hidden="true"><i class="fb-truck"><b></b></i></div>
+<div class="fb-stops" role="tablist" aria-label="Stages of a rescue">
+<sc-for list="{{fb.stops}}" as="x" hint-placeholder-count="6"><button class="{{x.cls}}" type="button" role="tab" id="{{x.id}}" aria-selected="{{x.on}}" aria-controls="fb-panel" tabindex="{{x.ti}}" onClick="{{x.pick}}" onKeyDown="{{x.key}}" data-cur="STOP"><b>{{x.n}}</b><span>{{x.t}}</span></button></sc-for>
+</div>
+</div>
+<div class="fb-bill" id="fb-panel" role="tabpanel" aria-labelledby="{{fb.tabId}}">
+<p class="fb-bk">STOP {{fb.cur.n}} OF 06 / {{fb.cur.who}}</p>
+<h4>{{fb.cur.t}}</h4>
+<p class="fb-bd">{{fb.cur.d}}</p>
+<dl class="fb-dl"><div><dt>Runs in</dt><dd><code>{{fb.cur.fn}}</code></dd></div><div><dt>Status after this stop</dt><dd><code>{{fb.cur.st}}</code></dd></div></dl>
+</div>
+<div class="fb-sec">
+<sc-for list="{{fb.security}}" as="x" hint-placeholder-count="4"><div class="fb-sc"><p class="fb-sck">{{x.k}}</p><p>{{x.v}}</p></div></sc-for>
+</div>
+</section>
+<section class="cs-sec" id="cs-6" aria-labelledby="cs-6-h">
+<h3 class="cs-h" id="cs-6-h" tabindex="-1"><span>06</span>Implementation / how a match is scored</h3>
+<p class="cs-dg">RE-IMPLEMENTED IN YOUR BROWSER FROM SRC/LIB/MATCHING.TS, WITH THE SAME WEIGHTS. EXAMPLE INPUTS, NOT REAL LISTINGS.</p>
+<div class="fb-mx">
+<div class="fb-ctl">
+<label class="fb-rg"><span>Straight-line distance <b data-v="d">{{fb.dTxt}}</b></span><input type="range" min="0" max="20" step="0.5" data-k="d" ref="{{fb.rgRef}}" aria-valuetext="{{fb.dTxt}}"></label>
+<label class="fb-rg"><span>Donor's pickup radius <b data-v="r">{{fb.rTxt}}</b></span><input type="range" min="1" max="20" step="1" data-k="r" ref="{{fb.rgRef}}" aria-valuetext="{{fb.rTxt}}"></label>
+<label class="fb-rg"><span>Pickup window left <b data-v="m">{{fb.mTxt}}</b></span><input type="range" min="0" max="720" step="5" data-k="m" ref="{{fb.rgRef}}" aria-valuetext="{{fb.mTxt}}"></label>
+<label class="fb-rg"><span>Meals in the listing <b data-v="meals">{{fb.mealsTxt}}</b></span><input type="range" min="5" max="200" step="5" data-k="meals" ref="{{fb.rgRef}}" aria-valuetext="{{fb.mealsTxt}}"></label>
+<label class="fb-rg"><span>Receiver's capacity <b data-v="cap">{{fb.capTxt}}</b></span><input type="range" min="10" max="300" step="10" data-k="cap" ref="{{fb.rgRef}}" aria-valuetext="{{fb.capTxt}}"></label>
+<div class="fb-fs" role="group" aria-labelledby="fb-st-k"><p class="fb-fk" id="fb-st-k">Storage the food needs</p>
+<sc-for list="{{fb.stores}}" as="x" hint-placeholder-count="3"><button class="{{x.cls}}" type="button" aria-pressed="{{x.on}}" onClick="{{x.pick}}" data-cur="SET">{{x.t}}</button></sc-for>
+</div>
+<div class="fb-fs" role="group" aria-labelledby="fb-rc-k"><p class="fb-fk" id="fb-rc-k">The receiver</p>
+<sc-for list="{{fb.togs}}" as="x" hint-placeholder-count="3"><button class="{{x.cls}}" type="button" aria-pressed="{{x.on}}" onClick="{{x.pick}}" data-cur="SET">{{x.t}}</button></sc-for>
+</div>
+</div>
+<div class="fb-out">
+<div class="{{fb.stampCls}}"><span>{{fb.stampK}}</span><b>{{fb.stamp}}</b></div>
+<div class="fb-bars" aria-hidden="{{fb.barsHidden}}">
+<sc-for list="{{fb.bars}}" as="b" hint-placeholder-count="5"><div class="fb-bar"><span class="fb-bk2">{{b.k}} <em>{{b.w}}</em></span><i class="fb-trk" style="--w: {{b.share}}%"><b style="--v: {{b.v}}%"></b></i><span class="fb-pt">{{b.pts}}</span></div></sc-for>
+</div>
+<p class="fb-sum" aria-live="polite">{{fb.summary}}</p>
+<p class="fb-note">Two more hard filters run in the real code and are not shown here: the listing must still be open, and demo and real records never match.</p>
+</div>
+</div>
+<div class="fb-ho">
+<div class="fb-tk">
+<div class="fb-tkl"><p class="fb-tkk">HANDOVER CODE</p><p class="fb-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></p><p class="fb-tkk">6 DIGITS / ONE TIME</p></div>
+<ul class="fb-tkr"><sc-for list="{{fb.handover}}" as="x" hint-placeholder-count="6"><li>{{x.t}}</li></sc-for></ul>
+</div>
+<ul class="cs-list"><sc-for list="{{fb.impl}}" as="x" hint-placeholder-count="4"><li>{{x.t}}</li></sc-for></ul>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ds.isSc}}" hint-placeholder-val="{{ false }}">
+<section class="cs-sec" id="cs-5" aria-labelledby="cs-5-h">
+<h3 class="cs-h" id="cs-5-h" tabindex="-1"><span>05</span>Architecture / the signal chain</h3>
+<p class="cs-dg">DIAGRAM / DRAWN FROM THE FIRMWARE AND THE DASHBOARD SOURCE. NOT A SCREENSHOT. PICK A BLOCK.</p>
+<div class="sc-chain" role="tablist" aria-label="Signal chain, from sensor to screen">
+<sc-for list="{{sc.nodes}}" as="x" hint-placeholder-count="6"><button class="{{x.cls}}" type="button" role="tab" id="{{x.id}}" aria-selected="{{x.on}}" aria-controls="sc-panel" tabindex="{{x.ti}}" onClick="{{x.pick}}" onKeyDown="{{x.key}}" data-cur="PROBE"><i>{{x.k}}</i><b>{{x.t}}</b></button></sc-for>
+</div>
+<div class="sc-card" id="sc-panel" role="tabpanel" aria-labelledby="{{sc.tabId}}">
+<p class="sc-ck">BLOCK {{sc.cur.n}} / {{sc.cur.k}}</p>
+<h4>{{sc.cur.t}}</h4>
+<p>{{sc.cur.d}}</p>
+<p class="sc-spec">{{sc.cur.spec}}</p>
+</div>
+<div class="sc-bom">
+<p class="sc-bk">BILL OF MATERIALS / FROM THE FIRMWARE SOURCE</p>
+<dl><sc-for list="{{sc.bom}}" as="x" hint-placeholder-count="6"><div><dt>{{x.k}}</dt><dd>{{x.v}}</dd></div></sc-for></dl>
+</div>
+</section>
+<section class="cs-sec" id="cs-6" aria-labelledby="cs-6-h">
+<h3 class="cs-h" id="cs-6-h" tabindex="-1"><span>06</span>Implementation / the serial parser lab</h3>
+<p class="cs-dg">RE-CREATED IN YOUR BROWSER FROM PARSEPROTOCOLLINE() IN SRC/LIB/SERIALPROTOCOL.TS. EXAMPLE LINES, NOT RECORDED DATA. NO HARDWARE IS CONNECTED.</p>
+<div class="sc-lab">
+<div class="sc-mon">
+<p class="sc-mk">SERIAL MONITOR / 115200 BAUD</p>
+<div class="sc-samples" role="group" aria-label="Example lines to send">
+<sc-for list="{{sc.samples}}" as="x" hint-placeholder-count="6"><button class="{{x.cls}}" type="button" aria-pressed="{{x.on}}" onClick="{{x.pick}}" data-cur="SEND">{{x.t}}</button></sc-for>
+</div>
+<label class="sc-in"><span>Or type a line, then press Enter</span><input type="text" spellcheck="false" autocomplete="off" maxlength="600" value="{{sc.line}}" onChange="{{sc.setLine}}" onKeyDown="{{sc.lineKey}}"></label>
+<button class="sc-send" type="button" onClick="{{sc.send}}" data-cur="SEND">Send line</button>
+</div>
+<div class="sc-ver">
+<p class="{{sc.vCls}}" aria-live="polite"><b>{{sc.vHead}}</b>{{sc.vWhy}}</p>
+<p class="sc-cnt">Lines sent: <b>{{sc.ok}}</b> accepted / <b>{{sc.bad}}</b> ignored and counted</p>
+<div class="sc-gg">
+<div class="sc-ld"><p>LOAD <b>{{sc.last.kg}} kg</b> <em>{{sc.last.zone}}</em></p><i class="{{sc.last.zCls}}" style="--l: {{sc.last.lPct}}%"><b></b><u style="left: 56.67%"></u><u style="left: 66.67%"></u></i><small>0 / warning 0.68 / limit 0.8 / 1.2 kg</small></div>
+<div class="sc-dl"><p>ANGLE <b>{{sc.last.ang}}&deg;</b> <em>{{sc.last.tilt}}</em></p><i class="{{sc.last.tCls}}" style="--a: {{sc.last.a}}deg"><b></b></i></div>
+<p class="sc-flag">Firmware's own flag: <b>unsafe = {{sc.last.unsafe}}</b>. {{sc.last.buzz}}</p>
+</div>
+<p class="sc-note">Zones use the firmware-aligned thresholds from src/lib/defaults.ts: 0.8 kg, a warning at 85%, 20&deg;. The gauges show the last accepted line.</p>
+</div>
+</div>
+<div class="sc-two">
+<div class="sc-st">
+<p class="sc-bk">CONNECTION STATUSES / AN OPEN PORT IS NEVER COUNTED AS LIVE DATA</p>
+<dl><sc-for list="{{sc.statuses}}" as="x" hint-placeholder-count="5"><div><dt>{{x.k}}</dt><dd>{{x.v}}</dd></div></sc-for></dl>
+</div>
+<figure class="sc-hy">
+<svg viewBox="0 0 320 150" role="img" aria-labelledby="sc-hy-t"><title id="sc-hy-t">Strike counting with hysteresis: a strike starts when load rises above 20% of the limit and ends only when it falls below 8%. A dip that stays above 8% is still the same strike.</title>
+<path class="hy-g" d="M10 22 H310 M10 128 H310"></path>
+<path class="hy-on" d="M10 70 H310"></path><path class="hy-off" d="M10 106 H310"></path>
+<path class="hy-c" d="M10 124 C30 124 36 44 60 44 C80 44 84 94 100 94 C116 94 118 44 136 44 C156 44 160 124 180 124 C196 124 204 40 226 40 C248 40 254 124 276 124 H310"></path>
+<circle class="hy-s" cx="38.6" cy="70" r="5"></circle><circle class="hy-s" cx="204.7" cy="70" r="5"></circle>
+<text x="100" y="140" text-anchor="middle">same strike</text>
+<text x="312" y="66" text-anchor="end">20% on</text><text x="312" y="102" text-anchor="end">8% off</text>
+</svg>
+<figcaption>ILLUSTRATION OF THE RULE IN SRC/LIB/SESSIONSTATS.TS, NOT RECORDED DATA. Two dots, two strikes. The dip in the first strike stays above 8%, so it does not start a new one.</figcaption>
+</figure>
+</div>
+<ul class="cs-list"><sc-for list="{{sc.impl}}" as="x" hint-placeholder-count="4"><li>{{x.t}}</li></sc-for></ul>
+</section>
+</sc-if>
+
+<sc-if value="{{ds.isCe}}" hint-placeholder-val="{{ false }}">
+<section class="cs-sec" id="cs-5" aria-labelledby="cs-5-h">
+<h3 class="cs-h" id="cs-5-h" tabindex="-1"><span>05</span>Architecture / where a question goes</h3>
+<p class="cs-dg">DIAGRAM / THE PATH THE CODE TAKES FOR EACH KIND OF QUESTION. IT DOES NOT RUN THE REAL RETRIEVER. PICK A QUESTION.</p>
+<div class="ce-picks" role="tablist" aria-label="Kinds of question">
+<sc-for list="{{ce.picks}}" as="x" hint-placeholder-count="4"><button class="{{x.cls}}" type="button" role="tab" id="{{x.id}}" aria-selected="{{x.on}}" aria-controls="ce-panel" tabindex="{{x.ti}}" onClick="{{x.pick}}" onKeyDown="{{x.key}}" data-cur="TRACE">{{x.t}}</button></sc-for>
+</div>
+<div class="ce-tr" id="ce-panel" role="tabpanel" aria-labelledby="{{ce.tabId}}">
+<p class="ce-q"><span>STUDENT ASKS</span>&ldquo;{{ce.q}}&rdquo;</p>
+<div class="ce-flow" aria-hidden="true">
+<div class="{{ce.nc.q}}"><b>Question</b><span>POST /api/chat, signed-in user</span></div>
+<div class="{{ce.nc.small}}"><b>Smalltalk check</b><span>greetings, thanks, goodbyes</span></div>
+<div class="{{ce.nc.reply}}"><b>Canned reply</b><span>no retrieval, no model</span></div>
+<div class="{{ce.nc.retr}}"><b>Keyword retrieval</b><span>17 JSON files, 36 entries</span></div>
+<div class="{{ce.nc.gate}}"><b>Evidence gate</b><span>score of 1.0 or more</span></div>
+<div class="{{ce.nc.none}}"><b>Not-found reply</b><span>plus related topics</span></div>
+<div class="{{ce.nc.llm}}"><b>Grounded generation</b><span>OpenRouter, temperature 0.2</span></div>
+<div class="{{ce.nc.err}}"><b>Stored answer</b><span>if the model call fails</span></div>
+<div class="{{ce.nc.ans}}"><b>Cited answer</b><span>source cards, verified labels</span></div>
+</div>
+<ol class="ce-log"><sc-for list="{{ce.log}}" as="x" hint-placeholder-count="5"><li><b>{{x.n}}</b>{{x.t}}</li></sc-for></ol>
+</div>
+</section>
+<section class="cs-sec" id="cs-6" aria-labelledby="cs-6-h">
+<h3 class="cs-h" id="cs-6-h" tabindex="-1"><span>06</span>Implementation / the catalogue and the counter</h3>
+<div class="ce-two">
+<div class="ce-w">
+<p class="ce-k">RETRIEVAL WEIGHTS / FROM KNOWLEDGE_RETRIEVER.PY</p>
+<sc-for list="{{ce.weights}}" as="w" hint-placeholder-count="8"><div class="ce-wr"><span>{{w.k}}</span><i style="--w: {{w.pct}}%"></i><b>{{w.v}}</b></div></sc-for>
+<p class="ce-sm">Minimum score to count as evidence: 1.0. At most 3 entries per answer, one per category. A short follow-up with no keywords of its own borrows them from the previous question.</p>
+</div>
+<div class="ce-kb">
+<p class="ce-k">THE 17 TOPICS</p>
+<ul class="ce-tp"><sc-for list="{{ce.topics}}" as="t" hint-placeholder-count="17"><li>{{t.t}}</li></sc-for></ul>
+<p class="ce-sm">Each entry stores its source URL on vitap.ac.in, a source type and a last-confirmed date, which is what the source cards show.</p>
+</div>
+</div>
+<div class="ce-acc">
+<p class="ce-k">ACCOUNTS AND SAVED CHATS / FROM THE BACKEND</p>
+<dl><sc-for list="{{ce.accounts}}" as="x" hint-placeholder-count="5"><div><dt>{{x.k}}</dt><dd>{{x.v}}</dd></div></sc-for></dl>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ds.isPw}}" hint-placeholder-val="{{ false }}">
+<section class="cs-sec" id="cs-5" aria-labelledby="cs-5-h">
+<h3 class="cs-h" id="cs-5-h" tabindex="-1"><span>05</span>Architecture / five steps, one function</h3>
+<p class="cs-dg">DIAGRAM / THE STEPS OF GENERATE_PASSWORD() AND MAIN() IN MAIN.PY.</p>
+<ol class="pw-steps"><sc-for list="{{pwv.steps}}" as="x" hint-placeholder-count="5"><li><b>{{x.n}}</b><div><p class="pw-sk">{{x.t}}</p><code>{{x.code}}</code><p>{{x.d}}</p></div></li></sc-for></ol>
+<figure class="pw-code">
+<figcaption>THE REAL SOURCE / MAIN.PY, GENERATE_PASSWORD()</figcaption>
+<pre><code>{{pwv.code}}</code></pre>
+</figure>
+</section>
+<section class="cs-sec" id="cs-6" aria-labelledby="cs-6-h">
+<h3 class="cs-h" id="cs-6-h" tabindex="-1"><span>06</span>Implementation / try it</h3>
+<p class="pw-warn" role="note"><b>BROWSER RE-CREATION</b>This runs in JavaScript in your browser, using crypto.getRandomValues. It follows the same steps, but it is not Shanmayi's Python code. The real project is main.py, using Python's secrets module.</p>
+<div class="pw-lab">
+<div class="pw-con">
+<label for="pw-len">Enter password length (minimum 4):</label>
+<input id="pw-len" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" maxlength="12" value="{{pwv.len}}" onChange="{{pwv.setLen}}" onKeyDown="{{pwv.lenKey}}">
+<button class="pw-go" type="button" onClick="{{pwv.go}}" data-cur="RUN">Generate</button>
+</div>
+<div class="pw-outw" aria-live="polite">
+<sc-if value="{{pwv.err}}" hint-placeholder-val="{{ false }}"><p class="pw-err">Error: {{pwv.errText}}</p></sc-if>
+<sc-if value="{{pwv.note}}" hint-placeholder-val="{{ false }}"><p class="pw-err soft">{{pwv.errText}}</p></sc-if>
+<sc-if value="{{pwv.ok}}" hint-placeholder-val="{{ true }}">
+<p class="pw-rk">Generated Password:</p>
+<p class="pw-pass" aria-label="{{pwv.passAria}}"><sc-for list="{{pwv.chars}}" as="c" hint-placeholder-count="16"><span class="{{c.cls}}" aria-hidden="true">{{c.c}}</span></sc-for></p>
+<p class="pw-rk">Password Length: {{pwv.n}}</p>
+</sc-if>
+</div>
+<sc-if value="{{pwv.ok}}" hint-placeholder-val="{{ true }}">
+<div class="pw-tools"><button class="pw-cp" type="button" onClick="{{pwv.copy}}" data-cur="COPY">Copy password</button><span class="pw-cpm" aria-live="polite">{{pwv.copied}}</span></div>
+<div class="pw-viz">
+<div class="pw-row"><p class="pw-vk"><b>1</b>Guarantee</p><p class="pw-vc"><sc-for list="{{pwv.pre1}}" as="c" hint-placeholder-count="4"><span class="{{c.cls}}">{{c.c}}</span></sc-for></p></div>
+<div class="pw-row"><p class="pw-vk"><b>2</b>Fill</p><p class="pw-vc"><sc-for list="{{pwv.pre2}}" as="c" hint-placeholder-count="12"><span class="{{c.cls}}">{{c.c}}</span></sc-for></p></div>
+<div class="pw-row"><p class="pw-vk"><b>3</b>Shuffle</p><p class="pw-vc"><sc-for list="{{pwv.chars}}" as="c" hint-placeholder-count="16"><span class="{{c.cls}}">{{c.c}}</span></sc-for></p></div>
+<ul class="pw-key"><sc-for list="{{pwv.counts}}" as="k" hint-placeholder-count="4"><li class="{{k.cls}}"><i></i>{{k.k}} <b>{{k.n}}</b></li></sc-for><li class="pw-kg"><i></i>Ringed: the four guaranteed characters</li></ul>
+</div>
+</sc-if>
+</div>
+</section>
+</sc-if>
+
+<section class="cs-sec cs-dec" id="cs-7" aria-labelledby="cs-7-h">
+<h3 class="cs-h" id="cs-7-h" tabindex="-1"><span>07</span>Decisions and trade-offs</h3>
+<ol class="cs-decs"><sc-for list="{{ds.decisions}}" as="x" hint-placeholder-count="5"><li><b>{{x.n}}</b><p class="cs-dd">{{x.d}}</p><p>{{x.t}}</p></li></sc-for></ol>
+</section>
+<section class="cs-sec cs-lim" id="cs-8" aria-labelledby="cs-8-h">
+<h3 class="cs-h" id="cs-8-h" tabindex="-1"><span>08</span>Challenges and limits</h3>
+<p class="cs-p">Taken from the repository's own notes. Saying what is missing is part of the work.</p>
+<ul class="cs-list"><sc-for list="{{ds.limits}}" as="x" hint-placeholder-count="5"><li>{{x.t}}</li></sc-for></ul>
+</section>
+<section class="cs-sec cs-end" id="cs-9" aria-labelledby="cs-9-h">
+<h3 class="cs-h" id="cs-9-h" tabindex="-1"><span>09</span>Code and sources</h3>
+<div class="ds-links">
+<sc-if value="{{ds.hasRepo}}" hint-placeholder-val="{{ true }}"><a class="ds-a" href="{{ds.repo}}" target="_blank" rel="noopener noreferrer" data-cur="GITHUB">GitHub repository<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 L19 5 M9 5 H19 V15"></path></svg></a></sc-if>
+<sc-if value="{{ds.hasDemo}}" hint-placeholder-val="{{ false }}"><a class="ds-a hot" href="{{ds.demo}}" target="_blank" rel="noopener noreferrer" data-cur="LIVE">Live demo<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 L19 5 M9 5 H19 V15"></path></svg></a></sc-if>
+</div>
+<sc-if value="{{ds.hasShots}}" hint-placeholder-val="{{ false }}">
+<div class="cs-shots"><sc-for list="{{ds.shots}}" as="x" hint-placeholder-count="2"><figure><img src="{{x.src}}" alt="{{x.alt}}" loading="lazy"><figcaption>SCREENSHOT / {{x.cap}}</figcaption></figure></sc-for></div>
+</sc-if>
+<p class="cs-vis">{{ds.visNote}}</p>
+<p class="cs-srck">READ FOR THIS CASE STUDY / {{ds.srcRepo}}</p>
+<ul class="cs-src"><sc-for list="{{ds.sources}}" as="x" hint-placeholder-count="5"><li><code>{{x.t}}</code></li></sc-for></ul>
+<button class="cs-next" type="button" onClick="{{dsNext}}" data-cur="NEXT"><span>NEXT CASE STUDY</span><b>{{ds.nextName}}</b></button>
+</section>
+</div>
+</div>
+</sc-if>

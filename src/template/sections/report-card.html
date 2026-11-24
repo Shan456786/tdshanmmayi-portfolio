@@ -1,0 +1,52 @@
+<section tabindex="-1" class="chap rc" data-vis="leetcode" id="leetcode" data-ch="5" aria-labelledby="rc-h">
+<header class="cho">
+<span class="cho-n" aria-hidden="true">05</span>
+<p class="cho-k">CHAPTER FIVE / PROBLEM SOLVING</p>
+<h2 class="rc-hh" id="rc-h">Report <em>card.</em></h2>
+<p class="rc-sub">{{lc.sub}}</p>
+</header>
+<article class="rc-card">
+<span class="rc-holes" aria-hidden="true"></span>
+<header class="rc-top">
+<span class="rc-seal" aria-hidden="true">t.</span>
+<div class="rc-title"><span>PROGRESS REPORT / TERM: ONGOING</span><b>Shanmayi Shree Tadala</b><span>SUBJECT: PROBLEM SOLVING / LEETCODE</span></div>
+<a class="rc-link" href="{{lc.url}}" target="_blank" rel="noopener noreferrer" data-cur="OPEN">leetcode.com/u/{{lc.user}}<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 L10 2 M4 2 L10 2 L10 8"></path></svg></a>
+</header>
+<p class="{{lc.stCls}}" role="status"><i aria-hidden="true"></i><span>{{lc.stText}}</span></p>
+<div class="rc-body">
+<div class="rc-main">
+<p class="rc-big"><span class="rc-num">{{lc.solved}}</span><span class="rc-lab">problems<br>solved</span></p>
+<table class="rc-tab">
+<thead><tr><th>Level</th><th>Solved</th><th>Share</th></tr></thead>
+<tbody>
+<tr><td><i class="lc-e"></i>Easy</td><td>{{lc.easy}}</td><td><span class="rc-bar"><b class="lc-e" style="width: {{lc.pe}}%"></b></span></td></tr>
+<tr><td><i class="lc-m"></i>Medium</td><td>{{lc.medium}}</td><td><span class="rc-bar"><b class="lc-m" style="width: {{lc.pm}}%"></b></span></td></tr>
+<tr><td><i class="lc-hd"></i>Hard</td><td>{{lc.hard}}</td><td><span class="rc-bar"><b class="lc-hd" style="width: {{lc.ph}}%"></b></span></td></tr>
+</tbody>
+</table>
+<dl class="rc-stats">
+<div><dt>LONGEST STREAK</dt><dd>{{lc.maxStreak}}<small>{{lc.maxWhen}}</small></dd></div>
+<div><dt>BADGES</dt><dd>{{lc.badgeCount}}<small>{{lc.badgeWhen}}</small></dd></div>
+<div><dt>ACTIVE DAYS</dt><dd>{{lc.activeDays}}<small>{{lc.yearWhen}}</small></dd></div>
+<div><dt>SUBMISSIONS</dt><dd>{{lc.submissions}}<small>{{lc.yearWhen}}</small></dd></div>
+</dl>
+</div>
+<div class="rc-side">
+<div class="lc-cal-head"><span>ACTIVITY / {{lc.calRange}}</span><button class="lc-3d" type="button" aria-pressed="{{calPressed}}" onClick="{{calToggle}}" data-cur="3D">{{calBtn}}</button></div>
+<div class="lc-cal-wrap">
+<div class="{{calCls}}" role="img" aria-label="{{lc.calAria}}">
+<sc-for list="{{lc.cells}}" as="d" hint-placeholder-count="21"><span class="{{d.cls}}" style="--h: {{d.h}}" title="{{d.t}}"></span></sc-for>
+</div>
+</div>
+<div class="lc-legend" aria-hidden="true"><span>LESS</span><i class="lc-d"></i><i class="lc-d l1"></i><i class="lc-d l2"></i><i class="lc-d l3"></i><i class="lc-d l4"></i><span>MORE</span></div>
+<div class="lc-recent">
+<p class="lc-recent-k"><span>RECENTLY SOLVED</span><span>UTC DATES</span></p>
+<ol>
+<sc-for list="{{lc.recent}}" as="r" hint-placeholder-count="5"><li><a href="{{r.href}}" target="_blank" rel="noopener noreferrer" data-cur="OPEN">{{r.title}}</a><span>{{r.date}}</span></li></sc-for>
+</ol>
+</div>
+</div>
+</div>
+<footer class="rc-foot"><span>{{lc.foot}}</span><span>BADGES: {{lc.badgeCount}} / LATEST: {{lc.badgeLatest}}</span></footer>
+</article>
+</section>

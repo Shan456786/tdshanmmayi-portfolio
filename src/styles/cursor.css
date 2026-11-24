@@ -1,0 +1,10 @@
+/* cursor */
+.cur{position:fixed;left:0;top:0;z-index:100;pointer-events:none;will-change:transform}
+.cur-in{position:absolute;left:0;top:0;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;border:1.5px solid var(--g);display:flex;align-items:center;justify-content:center;transition:width .3s cubic-bezier(.2,1.4,.4,1),height .3s cubic-bezier(.2,1.4,.4,1),background .2s}
+.cur-lab{font:700 11px/1 var(--fm);color:var(--b);letter-spacing:.1em;opacity:0;transition:opacity .2s}
+.cur-in.on{width:76px;height:76px;background:var(--g)}
+.cur-in.on .cur-lab{opacity:1}
+@media (hover: none), (pointer: coarse){
+  .cur{display:none}
+}
+

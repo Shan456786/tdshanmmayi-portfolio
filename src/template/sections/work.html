@@ -1,0 +1,73 @@
+<section tabindex="-1" class="chap wk2" data-vis="work" id="work" data-ch="3" aria-labelledby="wk2-h">
+<header class="cho">
+<span class="cho-n" aria-hidden="true">03</span>
+<p class="cho-k">CHAPTER THREE / WORK</p>
+<h2 class="wk2-h" id="wk2-h">Five <em>things I built.</em></h2>
+<p class="wk2-sub">Four have full case studies, written from each project's own repository. The fifth waits in the archive. Nothing here is made up.</p>
+<p class="wk2-more"><button class="wk2-arc" type="button" onClick="{{arcOpen}}" data-cur="ARCHIVE">Open the archive</button></p>
+</header>
+
+<div class="wk2-grid">
+<ol class="pj-index">
+<sc-for list="{{pjs}}" as="p" hint-placeholder-count="5">
+<li class="{{p.cls}}" style="--pc: {{p.c}}; --pf: {{p.fg}}" onMouseEnter="{{p.hover}}">
+<button class="pj-row" type="button" onClick="{{p.open}}" onFocus="{{p.hover}}" data-cur="OPEN" aria-label="{{p.aria}}">
+<span class="pj-n">{{p.n}}</span>
+<span class="{{p.tcls}}">{{p.name}}</span>
+<span class="pj-line">{{p.line}}</span>
+<span class="pj-tags">{{p.tags}}</span>
+<span class="pj-go" aria-hidden="true">{{p.go}}<svg viewBox="0 0 24 24"><path d="M5 19 L19 5 M9 5 H19 V15"></path></svg></span>
+</button>
+</li>
+</sc-for>
+</ol>
+
+<div class="pj-stage" aria-hidden="true">
+<div class="{{spec0}}">
+<span class="sp-k">01 / FOODBRIDGE</span>
+<div class="fb-bridge">
+<span class="fb-p a"><b>SURPLUS</b></span><span class="fb-p b"><b>NEED</b></span>
+<sc-for list="{{crates}}" as="cr" hint-placeholder-count="9"><span class="crate" style="left: {{cr.x}}%; top: {{cr.y}}%; rotate: {{cr.r}}deg; animation-delay: {{cr.d}}s"></span></sc-for>
+</div>
+<div class="fb-timer"><span>pickup window</span><i></i><span>safe-use deadline</span></div>
+<p class="sp-cap">Surplus food, matched to people who need it before time runs out.</p>
+</div>
+<div class="{{spec1}}">
+<span class="sp-k">02 / SMARTCRUTCH+</span>
+<div class="sc-panel">
+<span class="sc-sim">SIMULATED / DEMO DATA</span>
+<div class="sc-load"><span>LOAD</span><i><b></b></i></div>
+<div class="sc-dial"><span class="sc-needle"></span><span class="sc-arc"></span><b>ANGLE</b></div>
+<span class="sc-hw">ESP32 / HX711 / ADXL345</span>
+</div>
+<p class="sp-cap">A sensor-equipped crutch prototype and its live dashboard.</p>
+</div>
+<div class="{{spec2}}">
+<span class="sp-k">03 / CAMPUS EXPERT</span>
+<div class="ce-chat">
+<span class="ce-q">Where can I find the hostel rules?</span>
+<span class="ce-a"><i></i><i></i><i class="s"></i></span>
+<span class="ce-src"><b>SOURCE</b>vitap.ac.in<em>VERIFIED</em></span>
+</div>
+<p class="sp-cap">Answers only from a cited knowledge base. No evidence, no guessing.</p>
+</div>
+<div class="{{spec3}}">
+<span class="sp-k">04 / PASSWORD GENERATOR</span>
+<div class="pw-term">
+<span class="pw-top"><i></i><i></i><i></i><b>secrets</b></span>
+<span class="pw-l">SECURE PASSWORD GENERATOR</span>
+<span class="pw-l">length: 16</span>
+<span class="pw-out">{{pwOut}}</span>
+</div>
+<p class="sp-cap">Cryptographically secure randomness, every character type included.</p>
+</div>
+<div class="{{spec4}}">
+<span class="sp-k">05 / SCHEDURA</span>
+<div class="sd-cal">
+<sc-for list="{{calBlocks}}" as="cb" hint-placeholder-count="35"><span class="{{cb.cls}}"></span></sc-for>
+</div>
+<p class="sp-cap">A scheduling project. Full details are on their way.</p>
+</div>
+</div>
+</div>
+</section>

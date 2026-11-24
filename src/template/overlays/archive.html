@@ -1,0 +1,28 @@
+<sc-if value="{{axOpen}}" hint-placeholder-val="{{ false }}">
+<div class="ax" role="dialog" aria-modal="true" aria-labelledby="ax-h" tabindex="-1" onKeyDown="{{axKey}}">
+<div class="ax-in">
+<header class="ax-top">
+<span class="ds-k">THE ARCHIVE / {{axCount}} PROJECTS</span>
+<button class="ds-b x" type="button" onClick="{{arcClose}}" data-cur="CLOSE" aria-label="Close the archive">Close</button>
+</header>
+<h2 class="ax-h" id="ax-h" tabindex="-1">Everything I have built, <em>so far.</em></h2>
+<p class="ax-sub">Four projects have full case studies, written from their own repositories. Schedura stays in the archive without one.</p>
+<ol class="ax-list">
+<sc-for list="{{axItems}}" as="a" hint-placeholder-count="5">
+<li class="{{a.cls}}" style="--pc: {{a.c}}; --pf: {{a.fg}}">
+<span class="ax-n" aria-hidden="true">{{a.n}}</span>
+<div class="ax-main">
+<h3 class="{{a.tcls}}">{{a.name}}</h3>
+<p class="ax-line">{{a.line}}</p>
+<sc-if value="{{a.has}}" hint-placeholder-val="{{ true }}">
+<dl class="ax-meta"><div><dt>Type</dt><dd>{{a.type}}</dd></div><div><dt>Started</dt><dd>{{a.started}}</dd></div><div><dt>Inside</dt><dd>{{a.inside}}</dd></div></dl>
+</sc-if>
+</div>
+<sc-if value="{{a.has}}" hint-placeholder-val="{{ true }}"><button class="ax-go" type="button" id="{{a.goId}}" onClick="{{a.open}}" aria-label="{{a.aria}}" data-cur="READ">Read the case study<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 L19 5 M9 5 H19 V15"></path></svg></button></sc-if>
+<sc-if value="{{a.none}}" hint-placeholder-val="{{ false }}"><p class="ax-st" id="{{a.stId}}" tabindex="-1">ARCHIVED / NO CASE STUDY</p></sc-if>
+</li>
+</sc-for>
+</ol>
+</div>
+</div>
+</sc-if>

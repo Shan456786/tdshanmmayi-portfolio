@@ -1,0 +1,87 @@
+name: Sync LeetCode stats
+
+# Once a day: read the public LeetCode profile, validate it, and commit
+# public/leetcode.json. Uses the built-in GITHUB_TOKEN only. No secrets.
+#
+# On success: fresh figures and a new fetchedAt are committed.
+# On failure: the previous figures and fetchedAt are kept, lastAttempt records
+# the failure (so the page can say so), and this run is marked failed so
+# GitHub notifies you.
+
+# STATUS: manual only for now. The daily schedule is switched off until one manual run has been checked in the
+# real repository (see docs/leetcode-sync.md). To switch the daily schedule on, remove the leading "# " from the
+# two schedule lines below and push.
+on:
+  # schedule:
+  #   - cron: '41 2 * * *'   # daily at 02:41 UTC. GitHub can start scheduled runs late.
+  workflow_dispatch:        # "Run workflow" button in the Actions tab
+
+# Nothing by default. The job below asks only for what it needs.
+permissions: {}
+
+concurrency:
+  group: leetcode-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write        # the only permission: commit public/leetcode.json
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Self-test the sync script (offline)
+        run: node --test scripts/leetcode-sync.test.mjs
+
+      - name: Fetch public LeetCode data
+        id: sync
+        continue-on-error: true
+        run: node scripts/leetcode-sync.mjs ShanmayiShree public/leetcode.json
+
+      - name: Commit the data file
+        if: always() && steps.sync.outcome != 'skipped'
+        env:
+          OUTCOME: ${{ steps.sync.outcome }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/leetcode.json
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          if [ "$OUTCOME" = "success" ]; then MSG="LeetCode stats refreshed"; else MSG="LeetCode refresh failed, previous data kept"; fi
+          git commit -m "$MSG"
+          git pull --rebase
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          node -e '
+            let d; try { d = JSON.parse(require("fs").readFileSync("public/leetcode.json", "utf8")); } catch (e) { console.log("No data file yet."); process.exit(0); }
+            const a = d.lastAttempt || {};
+            const lines = [
+              "### LeetCode sync",
+              "",
+              "| | |", "|---|---|",
+              "| Last successful refresh (fetchedAt) | " + d.fetchedAt + " |",
+              "| This attempt | " + (a.at || "n/a") + " (" + (a.ok ? "ok" : "failed: " + a.error) + ") |",
+              "| Solved | " + d.solved + " (" + d.easy + " / " + d.medium + " / " + d.hard + ") |",
+              "| Longest streak (LeetCode max streak, past year) | " + d.maxStreak + " |",
+              "| Active days / submissions, past year | " + d.activeDays + " / " + d.submissions + " |"
+            ];
+            require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n") + "\n");
+          '
+
+      - name: Fail the run if the refresh failed
+        if: steps.sync.outcome == 'failure'
+        run: |
+          echo "::error::LeetCode refresh failed. The previous data was kept. See the 'Fetch public LeetCode data' step."
+          exit 1

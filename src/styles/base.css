@@ -1,0 +1,48 @@
+html{scroll-behavior:smooth}
+body{margin:0;background:#FCEFC7}
+a{color:#2E170E}
+a:hover{color:#1D45D6}
+.root{--b:#FCEFC7;--b2:#F4E2B0;--k:#EBDDB8;--a:#3CCBC8;--g:#2E170E;--t:#F0442B;--td:#C42A14;--y:#FFE11A;--c:#1D45D6;--p:#FF5DA8;--pd:#E41E7A;--o:#FF7A1C;--gr:#3DC45F;--pp:#FFFBEF;
+  --fc:'Big Shoulders Display','Oswald','Arial Narrow',Impact,sans-serif;--fd:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;--fs:'Instrument Serif',Georgia,serif;--fh:'Caveat','Comic Sans MS',cursive;--fm:'Space Mono',ui-monospace,Menlo,monospace;
+  position:relative;color:var(--g);font-family:var(--fd);background:var(--b);overflow-x:hidden;overflow-x:clip}
+.root *{box-sizing:border-box}
+/* looping animations pause while their section is off screen (the observer sets --ps on the section), their room is closed or their specimen is hidden */
+.root .doo img,.root .spin,.root .floor,.root .totem-wrap,.root .track,.root .fx-wave .lch,.root .pcb-tilt,.root .pcb.on .tr,.root .pcb-read,.root .lc-status i,.root .hav-in,.root .readout,.root .pass,.root .hang,.root .crate,.root .fb-timer i::after,.root .sc-load b,.root .sc-needle,.root .lx-diag,.root .ob-term i:nth-child(3),.root .sheen{animation-play-state:var(--ps,running)}
+.room:not(.on) .pcb-tilt,.room:not(.on) .pcb.on .tr,.room:not(.on) .pcb-read,.room:not(.on) .readout,.room:not(.on) .pass,.room:not(.on) .hang,.room:not(.on) .sheen,.spec:not(.on) .crate,.spec:not(.on) .fb-timer i::after,.spec:not(.on) .sc-load b,.spec:not(.on) .sc-needle,.hall.away .floor{animation-play-state:paused !important}
+/* focus: one visible ring everywhere, coloured to stand out on each section */
+.root{--fr:#2E170E}
+.root :focus-visible{outline:3px solid var(--fr);outline-offset:3px}
+.uv,.mn,.ft2,.r0,.r2{--fr:#FFE11A}
+.r1{--fr:#2E170E}
+.ds{--fr:currentColor}
+main:focus,.chap:focus,.room:focus,.rm-h:focus,.ds:focus,.mn:focus,#ds-h:focus{outline:none}
+.skip{position:fixed;left:16px;top:-90px;z-index:200;padding:12px 18px;background:#FFE11A;color:#2E170E !important;border:2px solid #2E170E;box-shadow:4px 4px 0 #2E170E;font:700 12px 'Space Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:top .2s}
+.skip:focus{top:16px;outline:none}
+.mn,.ds{overscroll-behavior:contain}
+button.hx{width:100%;border:0;background:none;color:inherit;text-align:left}
+@media (max-width: 430px){ .readout{min-height:152px !important} }
+@media (max-width: 340px){ .readout{min-height:172px !important} }
+:where(.root) button{font:inherit;color:inherit;cursor:pointer}
+.root img{max-width:100%}
+.page{position:relative;transition:filter .4s}
+.page.xerox{filter:grayscale(1) contrast(1.9) brightness(1.08)}
+.root.party .page{animation:hue 1.4s linear infinite}
+.root.party .spin,.root.party .doo img{animation-duration:.6s}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* shared textures */
+/* grain: a 256px tile of the same fractal noise, pre-converted so plain alpha blending gives the exact multiply result */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:90;background:url(../assets/textures/grain-tile.svg) 0 0 / 256px 256px repeat}
+.torn{clip-path:polygon(0.0% 0.8%, 3.5% 1.7%, 6.7% 1.4%, 10.8% 0.2%, 15.3% 0.1%, 19.6% 0.2%, 22.9% 1.1%, 28.3% 0.3%, 32.0% 1.6%, 37.9% 1.5%, 42.0% 2.5%, 45.2% 2.2%, 49.1% 0.4%, 52.4% 0.8%, 57.9% 0.5%, 62.6% 1.7%, 66.7% 1.4%, 69.9% 0.2%, 73.5% 1.8%, 77.8% 0.8%, 82.6% 1.2%, 86.5% 2.1%, 91.6% 0.6%, 96.3% 1.4%, 100% 1%, 100.0% 98.1%, 96.1% 97.5%, 92.8% 98.9%, 87.5% 99.6%, 83.0% 99.9%, 78.0% 98.0%, 73.3% 97.7%, 69.4% 98.2%, 64.6% 98.5%, 60.2% 97.8%, 54.4% 98.8%, 49.4% 99.8%, 44.3% 98.3%, 38.3% 97.9%, 34.5% 99.0%, 29.5% 99.9%, 25.1% 99.6%, 21.7% 99.8%, 16.4% 99.7%, 12.7% 99.0%, 7.1% 99.8%, 2.7% 98.6%, 0% 99%)}
+.tape{position:absolute;width:104px;height:28px;background:rgba(244,226,176,.85);border-left:2px dashed rgba(46,23,14,.18);border-right:2px dashed rgba(46,23,14,.18);z-index:3;box-shadow:0 1px 2px rgba(46,23,14,.15)}
+.mono{font-family:var(--fm)}
+.doodle path{fill:none;stroke:var(--g);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.paper-sh{box-shadow:0 1px 0 rgba(46,23,14,.08),0 22px 34px -22px rgba(46,23,14,.55)}
+.persp{perspective:1500px}
+.tilt{position:relative;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(var(--rz,0deg));transition:transform .45s cubic-bezier(.2,.8,.25,1),box-shadow .45s;will-change:transform}
+.tilt::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:6;background:radial-gradient(circle at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.38),transparent 55%);mix-blend-mode:soft-light;opacity:var(--go,0);transition:opacity .4s}
+.thick{box-shadow:0 1px 0 #EADFC6,0 2px 0 #E0D2B4,0 3px 0 #D4C4A2,0 4px 0 #C9B792,0 26px 34px -20px rgba(0,0,0,.55)}
+.cutout{display:block;width:100%;height:auto;filter:drop-shadow(0 0 1px rgba(46,23,14,.45)) drop-shadow(0 18px 20px rgba(46,23,14,.3))}
+.doo{position:absolute;z-index:5;pointer-events:none}
+.doo img{display:block;width:100%;height:auto;animation:twinkle 3.2s ease-in-out infinite}
+

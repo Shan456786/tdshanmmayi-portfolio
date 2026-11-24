@@ -1,0 +1,188 @@
+<section tabindex="-1" class="chap uv" data-vis="worlds" id="worlds" data-ch="2" aria-labelledby="uv-h">
+<header class="cho">
+<span class="cho-n" aria-hidden="true">02</span>
+<p class="cho-k">CHAPTER TWO / THREE WORLDS</p>
+<h2 class="uv-h" id="uv-h">One person. <em>Three rooms.</em></h2>
+<p class="uv-sub">Pick a door. Each room is a different side of me, and every room leads back to the hall.</p>
+</header>
+
+<div class="{{uvCls}}" ref="{{setUv}}" style="--ox: {{ox}}; --oy: {{oy}}">
+
+<!-- THE HALL -->
+<div class="{{hallCls}}" aria-hidden="{{hallHidden}}" inert="{{hallInert}}">
+<div class="cor">
+<span class="cw back"><span class="cw-sign">THE HALL</span></span>
+<span class="cw floor"></span>
+<span class="cw ceil"><i></i></span>
+<span class="cw left">
+<button class="door d0" type="button" onClick="{{enter0}}" data-cur="ENTER" aria-label="Enter world 01, the engineer's lab"><span class="door-light"></span><span class="door-leaf"><b>01</b><span>THE LAB</span><i></i></span></button>
+</span>
+<span class="cw backdoor">
+<button class="door d1" type="button" onClick="{{enter1}}" data-cur="ENTER" aria-label="Enter world 02, the artist's studio"><span class="door-light"></span><span class="door-leaf"><b>02</b><span>THE STUDIO</span><i></i></span></button>
+</span>
+<span class="cw right">
+<button class="door d2" type="button" onClick="{{enter2}}" data-cur="ENTER" aria-label="Enter world 03, backstage"><span class="door-light"></span><span class="door-leaf"><b>03</b><span>BACKSTAGE</span><i></i></span></button>
+</span>
+</div>
+<div class="hall-sil" aria-hidden="true"><span class="hs-sh"></span><img loading="lazy" decoding="async" src="{{asset.silhouette}}" alt="" draggable="false"></div>
+<div class="hall-labels" aria-hidden="true">
+<span class="hl l0"><b>The engineer</b>by curiosity</span>
+<span class="hl l1"><b>The artist</b>by imagination</span>
+<span class="hl l2"><b>The performer</b>by passion</span>
+</div>
+<div class="hall-m">
+<p>The hall</p>
+<button class="hm d0" type="button" onClick="{{enter0}}"><b>01</b><span>THE LAB<em>The engineer</em></span></button>
+<button class="hm d1" type="button" onClick="{{enter1}}"><b>02</b><span>THE STUDIO<em>The artist</em></span></button>
+<button class="hm d2" type="button" onClick="{{enter2}}"><b>03</b><span>BACKSTAGE<em>The performer</em></span></button>
+</div>
+</div>
+
+<!-- ROOM 01: THE LAB -->
+<article class="{{roomCls0}}" aria-hidden="{{roomHidden0}}" aria-labelledby="r0-h" tabindex="-1" onKeyDown="{{roomKey}}">
+<div class="rm-copy">
+<p class="rm-k">WORLD 01 / BY CURIOSITY</p>
+<h3 class="rm-h" id="r0-h" tabindex="-1">The <em>engineer's</em> lab</h3>
+<p class="rm-p">Cybersecurity, programming, problem-solving and building technology. Mostly, finding out how systems work.</p>
+<ul class="rm-tags"><li>Cybersecurity</li><li>Programming</li><li>Problem-solving</li><li>Building technology</li><li>Digital forensics</li><li>How systems work</li></ul>
+<div class="rm-ctl">
+<button class="rm-btn" type="button" aria-pressed="{{powerPressed}}" onClick="{{powerToggle}}" data-cur="ON"><i></i>{{powerLabel}}</button>
+<button class="rm-btn" type="button" aria-pressed="{{explodePressed}}" onClick="{{explodeToggle}}" data-cur="3D"><i></i>Exploded view</button>
+</div>
+</div>
+<div class="lab-bench">
+<div class="pcb-scene">
+<div class="pcb-tilt tilt3" data-tilt>
+<div class="{{pcbCls}}">
+<span class="pcb-floor" aria-hidden="true"></span>
+<span class="pcb-e e-f" aria-hidden="true"></span><span class="pcb-e e-r" aria-hidden="true"></span><span class="pcb-e e-l" aria-hidden="true"></span><span class="pcb-e e-b" aria-hidden="true"></span>
+<svg class="pcb-tr" viewBox="0 0 420 300" aria-hidden="true">
+<path class="tr" d="M118 57 H140 V122 H160"></path><path class="tr" d="M118 237 H140 V178 H160"></path><path class="tr" d="M300 57 H280 V122 H260"></path><path class="tr" d="M300 237 H280 V178 H260"></path><path class="tr" d="M210 236 V196"></path>
+<path class="tr thin" d="M20 150 H160"></path><path class="tr thin" d="M260 150 H400"></path><path class="tr thin" d="M76 34 V14 H344 V34"></path><path class="tr thin" d="M76 260 V286 H176"></path>
+<circle class="via" cx="20" cy="150" r="5"></circle><circle class="via" cx="400" cy="150" r="5"></circle><circle class="via" cx="176" cy="286" r="4"></circle><circle class="via" cx="344" cy="34" r="4"></circle>
+</svg>
+<span class="pcb-silk s1" aria-hidden="true">t. / BOARD 01</span>
+<span class="led l1" aria-hidden="true"></span><span class="led l2" aria-hidden="true"></span><span class="led l3" aria-hidden="true"></span>
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button class="{{c.cls}}" type="button" style="left: {{c.x}}px; top: {{c.y}}px; width: {{c.w}}px; height: {{c.h}}px" onMouseEnter="{{c.pick}}" onFocus="{{c.pick}}" onClick="{{c.pick}}" aria-label="{{c.aria}}" data-cur="READ"><span class="ch-top">{{c.label}}</span><span class="ch-s f"></span><span class="ch-s r"></span><span class="ch-s l"></span><span class="ch-s b"></span></button>
+</sc-for>
+</div>
+</div>
+</div>
+<div class="hexs" role="group" aria-label="Evidence sheet: the opening statement as raw bytes">
+<p class="hexs-k"><span>EVIDENCE 01 / RAW BYTES</span><span>hover or select a row to decode</span></p>
+<sc-for list="{{hex}}" as="h" hint-placeholder-count="9">
+<button class="{{h.cls}}" type="button" onMouseEnter="{{h.on}}" onFocus="{{h.on}}" onClick="{{h.on}}" aria-pressed="{{h.pressed}}" aria-label="{{h.aria}}" data-cur="READ"><span class="hx-o" aria-hidden="true">{{h.off}}</span><span class="hx-b" aria-hidden="true">{{h.bytes}}</span><span class="hx-a" aria-hidden="true">{{h.ascii}}</span></button>
+</sc-for>
+</div>
+<div class="readout" aria-live="polite">
+<span class="rd-k">{{rdK}}</span>
+<span class="rd-t">{{rdT}}</span>
+<span class="rd-l">{{rdL}}</span>
+</div>
+</div>
+<figure class="rm-av lab-av arw"><div class="ar"><img loading="lazy" decoding="async" class="ar-b" src="{{asset.fullBack}}" alt="" draggable="false"><img loading="lazy" decoding="async" class="ar-f" src="{{asset.fullFlat}}" alt="Screenprint-style full-length illustration of Shanmayi" draggable="false"><img loading="lazy" decoding="async" class="ar-i" src="{{asset.fullInk}}" alt="" draggable="false"></div></figure>
+</article>
+
+<!-- ROOM 02: THE STUDIO -->
+<article class="{{roomCls1}}" aria-hidden="{{roomHidden1}}" aria-labelledby="r1-h" tabindex="-1" onKeyDown="{{roomKey}}">
+<div class="rm-copy">
+<p class="rm-k">WORLD 02 / BY IMAGINATION</p>
+<h3 class="rm-h" id="r1-h" tabindex="-1">The <em>artist's</em> studio</h3>
+<p class="rm-p">Drawing, sketching, colour and visual experiments. Ideas usually show up as pictures first.</p>
+<ul class="rm-tags"><li>Drawing</li><li>Sketching</li><li>Colour</li><li>Visual experiments</li><li>Exploring ideas</li></ul>
+<div class="rm-ctl">
+<button class="rm-btn" type="button" aria-pressed="{{mirrorPressed}}" onClick="{{mirrorToggle}}" data-cur="MIRROR"><i></i>Mirror drawing</button>
+<button class="rm-btn" type="button" onClick="{{padClear}}" data-cur="CLEAR">Fresh sheet</button>
+</div>
+</div>
+<div class="studio" ref="{{setStudio}}">
+<span class="fp fp1" style="--z: 40" aria-hidden="true"><i></i><i></i><i></i><b>colour study</b></span>
+<span class="fp fp2" style="--z: 80" aria-hidden="true"><svg viewBox="0 0 120 90"><path d="M8 70 C 30 10, 60 90, 82 30 S 110 50, 114 12"></path><path d="M10 82 C 40 60, 70 86, 112 66"></path></svg><b>line study</b></span>
+<span class="fp fp3" style="--z: 20" aria-hidden="true"><i></i><b>shape study</b></span>
+<div class="easel">
+<span class="easel-legs" aria-hidden="true"></span>
+<div class="easel-board">
+<canvas class="dpad" ref="{{setPad}}" onPointerDown="{{padDown}}" onPointerMove="{{padMove}}" onPointerUp="{{padUp}}" onPointerCancel="{{padUp}}" aria-label="Drawing canvas. Pick a pencil and draw." role="img"></canvas>
+<span class="pad-hint" aria-hidden="true">{{padHint}}</span>
+</div>
+<span class="easel-tray" aria-hidden="true"></span>
+</div>
+<div class="pencil-cup" role="group" aria-label="Pencils">
+<sc-for list="{{pencils}}" as="p" hint-placeholder-count="7">
+<button class="{{p.cls}}" type="button" style="--pc: {{p.c}}; --pr: {{p.r}}deg" onClick="{{p.pick}}" aria-pressed="{{p.on}}" aria-label="{{p.label}} pencil" data-cur="PICK"><span></span></button>
+</sc-for>
+<span class="cup" aria-hidden="true"></span>
+</div>
+</div>
+<figure class="rm-av studio-av arw"><div class="ar"><img loading="lazy" decoding="async" class="ar-b" src="{{asset.mainBack}}" alt="" draggable="false"><img loading="lazy" decoding="async" class="ar-f" src="{{asset.mainFlat}}" alt="Screenprint-style illustration of Shanmayi, chin in hand, thinking" draggable="false"><img loading="lazy" decoding="async" class="ar-i" src="{{asset.mainInk}}" alt="" draggable="false"></div></figure>
+</article>
+
+<!-- ROOM 03: BACKSTAGE -->
+<article class="{{roomCls2}}" aria-hidden="{{roomHidden2}}" aria-labelledby="r2-h" tabindex="-1" onKeyDown="{{roomKey}}">
+<div class="rm-copy" inert="{{bsInert}}">
+<p class="rm-k">WORLD 03 / BY PASSION</p>
+<h3 class="rm-h" id="r2-h" tabindex="-1"><em>Backstage</em></h3>
+<p class="rm-p">Performing arts, expression, stage presence and everything associated with performance. This room is for dance.</p>
+<ul class="rm-tags"><li>Dance</li><li>Expression</li><li>Stage presence</li><li>Performance</li></ul>
+<div class="rm-ctl">
+<button class="rm-btn" type="button" aria-pressed="{{lightsPressed}}" onClick="{{lightsToggle}}" data-cur="LIGHTS"><i></i>Mirror lights</button>
+<button class="rm-btn" type="button" onClick="{{countIn}}" data-cur="5678">Count it in</button>
+</div>
+</div>
+<div class="{{bsCls}}" inert="{{bsInert}}">
+<div class="mirror">
+<sc-for list="{{bulbs}}" as="b" hint-placeholder-count="16"><span class="bulb" style="left: {{b.x}}%; top: {{b.y}}%; transition-delay: {{b.d}}s"></span></sc-for>
+<div class="mirror-glass">
+<span class="sheen" ref="{{setSheen}}" aria-hidden="true"></span>
+<span class="mnote n1">warm up first</span>
+<span class="mnote n2">5, 6, 7, 8</span>
+<span class="mnote n3">find your light</span>
+<span class="lip" aria-hidden="true">breathe.</span>
+</div>
+</div>
+<div class="floor-wrap" aria-hidden="true">
+<div class="dfloor">
+<sc-for list="{{marks}}" as="m" hint-placeholder-count="8"><span class="{{m.cls}}" style="left: {{m.x}}%; top: {{m.y}}%">{{m.n}}</span></sc-for>
+</div>
+</div>
+<span class="{{countCls}}" aria-live="polite">{{countText}}</span>
+<div class="pass-hook" aria-hidden="true"><span class="hook"></span></div>
+<button class="{{passCls}}" type="button" onClick="{{passFlip}}" aria-label="Stage pass. Press to flip it." data-cur="FLIP">
+<span class="lanyard"></span>
+<span class="pass-card">
+<span class="pass-f">
+<span class="ps-k">ALL ACCESS / BACKSTAGE</span>
+<span class="ps-n">Shanmayi Shree Tadala</span>
+<span class="ps-r">PERFORMER</span>
+<span class="ps-b">BY PASSION / ISSUE 01</span>
+</span>
+<span class="pass-b">
+<span class="ps-k">ON THIS PASS</span>
+<span class="ps-l">Dance</span><span class="ps-l">Expression</span><span class="ps-l">Stage presence</span>
+</span>
+</span>
+</button>
+<div class="rail" aria-hidden="true"><span class="rail-bar"></span><span class="hang h1"><i></i></span><span class="hang h2"><i></i></span><span class="hang h3"><i></i></span></div>
+<button class="to-stage" type="button" onClick="{{stageGo}}" data-cur="GO"><span>STAGE</span><b>Walk to the stage</b></button>
+</div>
+<div class="{{showCls}}" aria-hidden="{{showHidden}}">
+<span class="show-spot" aria-hidden="true"></span>
+<span class="show-sil" aria-hidden="true"><span class="ss-sh"></span><img loading="lazy" decoding="async" src="{{asset.silhouette}}" alt="" draggable="false"></span>
+<p class="show-k">ON STAGE</p>
+<p class="show-h">By <em>passion.</em></p>
+<p class="show-p">Performing arts, expression, stage presence.</p>
+<button class="rm-btn" type="button" onClick="{{stageBack}}" data-cur="BACK">Back to the dressing room</button>
+</div>
+</article>
+
+</div>
+
+<nav class="uv-map" aria-label="Rooms">
+<button class="{{mapHall}}" type="button" onClick="{{toHall}}" aria-current="{{mapCurH}}" data-cur="HALL"><b>00</b>The hall</button>
+<button class="{{map0}}" type="button" onClick="{{enter0}}" aria-current="{{mapCur0}}" data-cur="ENTER"><b>01</b>The lab</button>
+<button class="{{map1}}" type="button" onClick="{{enter1}}" aria-current="{{mapCur1}}" data-cur="ENTER"><b>02</b>The studio</button>
+<button class="{{map2}}" type="button" onClick="{{enter2}}" aria-current="{{mapCur2}}" data-cur="ENTER"><b>03</b>Backstage</button>
+<span class="uv-next">{{roomHint}}</span>
+</nav>
+</section>

@@ -1,0 +1,113 @@
+<section tabindex="-1" class="chap pg2" data-vis="play" id="play" data-ch="6" aria-labelledby="pg2-h">
+<header class="cho">
+<span class="cho-n" aria-hidden="true">06</span>
+<p class="cho-k">CHAPTER SIX / PLAYGROUND</p>
+<h2 class="pg2-h" id="pg2-h">Where the engineer <em>meets the artist.</em></h2>
+<p class="pg2-sub">Four experiments built for this page. Make a poster, pin up a collage, bend some type, or turn words into patterns with a hash function. Nothing gets saved.</p>
+</header>
+
+<div class="pg2-bench">
+<div class="pg2-sw" role="tablist" aria-label="Experiments">
+<sc-for list="{{stations}}" as="st" hint-placeholder-count="4">
+<button class="{{st.cls}}" type="button" role="tab" id="{{st.id}}" aria-selected="{{st.sel}}" aria-controls="pg-panel" tabindex="{{st.ti}}" onClick="{{st.pick}}" onKeyDown="{{st.key}}" data-cur="OPEN" style="--sc: {{st.c}}">
+<span class="sw-knob" aria-hidden="true"><i></i></span>
+<span class="sw-l">{{st.l}}</span>
+<b>{{st.t}}</b>
+<span class="sw-d">{{st.d}}</span>
+</button>
+</sc-for>
+</div>
+<div class="pg2-panel" id="pg-panel" role="tabpanel" aria-labelledby="{{pgTabId}}">
+<sc-if value="{{pg0}}" hint-placeholder-val="{{ true }}">
+<div class="pm persp">
+<div class="ctl">
+<p class="pg-desc" style="margin: 0"><b>Poster maker.</b> Type anything, pick a treatment and a colour. The poster updates as you go.</p>
+<label class="fld"><span>Your words</span><input class="txt" type="text" maxlength="60" value="{{posterText}}" onChange="{{setPosterText}}"></label>
+<div class="fld" role="group" aria-label="Typography"><span>Typography</span><div class="opts">
+<sc-for list="{{posterStyles}}" as="o" hint-placeholder-count="5"><button class="{{o.cls}}" type="button" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for>
+</div></div>
+<div class="fld" role="group" aria-label="Colour"><span>Colour</span><div class="opts">
+<sc-for list="{{posterThemes}}" as="o" hint-placeholder-count="7"><button class="{{o.cls}}" type="button" aria-label="{{o.label}}" aria-pressed="{{o.on}}" style="background-color: {{o.bg}}; color: {{o.fg}}" onClick="{{o.pick}}">Aa</button></sc-for>
+</div></div>
+<div class="opts"><button class="btn dark" type="button" onClick="{{posterShuffle}}" onMouseMove="{{mag}}" onMouseLeave="{{magOut}}" data-cur="MIX">surprise me</button></div>
+</div>
+<div class="{{posterCls}}" data-tilt style="background-color: {{pBg}}; color: {{pFg}}">
+<span class="pst-dots"></span>
+<span class="pst-reg a"></span><span class="pst-reg b"></span>
+<span class="pst-top"><span>Poster no. {{posterNo}}</span><span>Issue 01</span></span>
+<img loading="lazy" decoding="async" class="pst-doo" src="{{asset.doodleStar}}" alt="">
+<span class="pst-txt" style="font-size: {{pSize}}cqi; color: {{pAccent}}"><span class="pst-a">{{pA}}</span> <span class="pst-b">{{pB}}</span></span>
+<span class="pst-bot"><span>Made with tdshanmmayi</span><span>{{posterStyleName}}</span></span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{pg1}}" hint-placeholder-val="{{ false }}">
+<p class="pg-desc"><b>Collage board.</b> Drag anything around. Tap a piece to select it, then spin it with the red handle or the buttons below.</p>
+<div class="desk" ref="{{setDesk}}" onPointerDown="{{deskBg}}" aria-label="Sticker desk">
+<sc-for list="{{stickers}}" as="s" hint-placeholder-count="12">
+<div class="{{s.cls}}" style="left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; z-index: {{s.z}}; transform: translate(-50%, -50%) rotate({{s.r}}deg)" onPointerDown="{{s.down}}" data-cur="DRAG">
+<sc-if value="{{s.isImg}}" hint-placeholder-val="{{ false }}"><img loading="lazy" decoding="async" src="{{s.src}}" alt="" draggable="false"></sc-if>
+<sc-if value="{{s.isTxt}}" hint-placeholder-val="{{ false }}"><span class="{{s.tcls}}">{{s.text}}</span></sc-if>
+<sc-if value="{{s.sel}}" hint-placeholder-val="{{ false }}"><span class="rot-h" onPointerDown="{{s.rot}}" aria-hidden="true"></span></sc-if>
+</div>
+</sc-for>
+</div>
+<div class="desk-bar">
+<span class="desk-hint">{{deskHint}}</span>
+<div class="desk-btns">
+<button class="btn" type="button" onClick="{{rotL}}">rotate left</button>
+<button class="btn" type="button" onClick="{{rotR}}">rotate right</button>
+<button class="btn" type="button" onClick="{{deskShuffle}}">shuffle</button>
+<button class="btn dark" type="button" onClick="{{deskReset}}">tidy up</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{pg2}}" hint-placeholder-val="{{ false }}">
+<div class="lab">
+<div class="{{labCls}}" style="background-color: {{lBg}}; color: {{lFg}}">
+<span class="lab-top">TYPE LAB / SPECIMEN {{lFontNo}}</span>
+<div class="lab-txt" style="font-family: {{lFont}}; font-size: min({{lSize}}px, {{lSizeCq}}cqi); font-weight: {{lWeight}}; letter-spacing: {{lTrack}}em; text-shadow: {{lShadow}}">
+<sc-for list="{{labChars}}" as="c" hint-placeholder-count="9"><span class="lch" style="animation-delay: {{c.d}}s; rotate: {{c.r}}deg">{{c.ch}}</span></sc-for>
+</div>
+<span class="lab-meta"><span>{{lFontName}}</span><span>{{lSize}}px / {{lWeight}}</span></span>
+</div>
+<div class="ctl">
+<p class="pg-desc" style="margin: 0"><b>Type lab.</b> Change the words, then push the type around.</p>
+<label class="fld"><span>Phrase</span><input class="txt" type="text" maxlength="40" value="{{labText}}" onChange="{{setLabText}}"></label>
+<div class="fld" role="group" aria-label="Font"><span>Font</span><div class="opts">
+<sc-for list="{{labFonts}}" as="o" hint-placeholder-count="5"><button class="{{o.cls}}" type="button" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for>
+</div></div>
+<label class="fld"><span>Size</span><span class="rng"><input type="range" min="40" max="240" step="2" value="{{lSize}}" onChange="{{setLabSize}}"><output>{{lSize}}px</output></span></label>
+<label class="fld"><span>Weight</span><span class="rng"><input type="range" min="100" max="900" step="100" value="{{lWeight}}" onChange="{{setLabWeight}}"><output>{{lWeight}}</output></span></label>
+<label class="fld"><span>Spacing</span><span class="rng"><input type="range" min="-10" max="40" step="1" value="{{lTrackRaw}}" onChange="{{setLabTrack}}"><output>{{lTrack}}em</output></span></label>
+<div class="fld" role="group" aria-label="Colours"><span>Colours</span><div class="opts">
+<sc-for list="{{labPairs}}" as="o" hint-placeholder-count="6"><button class="{{o.cls}}" type="button" aria-label="{{o.label}}" aria-pressed="{{o.on}}" style="background-color: {{o.bg}}; color: {{o.fg}}" onClick="{{o.pick}}">Aa</button></sc-for>
+</div></div>
+<div class="fld" role="group" aria-label="Effects"><span>Effects</span><div class="opts">
+<sc-for list="{{labFx}}" as="o" hint-placeholder-count="4"><button class="{{o.cls}}" type="button" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for>
+</div></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{pg3}}" hint-placeholder-val="{{ false }}">
+<div class="hash">
+<div class="ctl">
+<p class="pg-desc" style="margin: 0"><b>Hash garden.</b> Type anything. A hash function turns it into a pattern. Same words, same pattern, every time. Change the salt and everything changes.</p>
+<label class="fld"><span>Your words</span><input class="txt" type="text" maxlength="40" value="{{hashText}}" onChange="{{setHashText}}"></label>
+<div class="opts"><button class="btn dark" type="button" onClick="{{hashSalt}}" onMouseMove="{{mag}}" onMouseLeave="{{magOut}}" data-cur="SALT">new salt</button><button class="btn" type="button" onClick="{{hashUnsalt}}">no salt</button></div>
+<dl class="hash-dl">
+<div><dt>salt</dt><dd>{{hashSaltShow}}</dd></div>
+<div><dt>fnv-1a</dt><dd>{{hashHex}}</dd></div>
+</dl>
+</div>
+<div class="hash-art" style="background-color: {{hashBg}}" role="img" aria-label="Pattern generated from the hash of your words">
+<sc-for list="{{hashTiles}}" as="h" hint-placeholder-count="64"><span class="{{h.cls}}" style="--hc: {{h.c}}; rotate: {{h.r}}deg"></span></sc-for>
+<span class="hash-cap">{{hashCap}}</span>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</section>

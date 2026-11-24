@@ -1,0 +1,33 @@
+{
+  "name": "shanmayi-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive editorial-scrapbook portfolio for Shanmayi Shree Tadala.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "node --test scripts/*.test.mjs",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "sync:leetcode": "node scripts/leetcode-sync.mjs ShanmayiShree public/leetcode.json",
+    "check": "npm run audit && npm run lint && npm test && npm run build",
+    "audit": "node scripts/audit-repo.mjs"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "htmlparser2": "^12.0.0",
+    "playwright": "^1.63.0",
+    "vite": "^8.3.8"
+  }
+}

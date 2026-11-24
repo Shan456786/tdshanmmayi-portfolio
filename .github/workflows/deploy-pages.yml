@@ -1,0 +1,66 @@
+name: Deploy to GitHub Pages
+
+# Builds the site and publishes it to GitHub Pages.
+#
+# STATUS: manual only. Nothing deploys until you press "Run workflow" in the Actions tab.
+# Automatic deploys are switched off on purpose until the site is ready to go public.
+#
+# To switch automatic deploys on, remove the leading "# " from the two blocks under "on:" below. They make it run
+#   1. on every push to main
+#   2. after the "Sync LeetCode stats" workflow finishes (a commit pushed with GITHUB_TOKEN does not start a push
+#      run, so this is what puts a fresh public/leetcode.json on the live site)
+#
+# One-time setup before the first run: Settings > Pages > Build and deployment > Source = "GitHub Actions".
+# Not using GitHub Pages? Delete this file. Vercel, Netlify and Cloudflare Pages rebuild on every commit by themselves.
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+  # workflow_run:
+  #   workflows: ['Sync LeetCode stats']
+  #   types: [completed]
+
+# Nothing by default. The job asks only for what publishing needs.
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # A cancelled sync run changed nothing, so there is nothing to publish. Success and failure both can
+    # (a failed sync still records "latest refresh failed" in the data file).
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read         # read the repository
+      pages: write           # publish to GitHub Pages
+      id-token: write        # lets deploy-pages prove the request came from this repository
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

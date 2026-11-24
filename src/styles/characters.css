@@ -1,0 +1,21 @@
+/* character library: physical cutouts */
+@keyframes sway{0%,100%{rotate:-.7deg}50%{rotate:.9deg}}
+@keyframes driftS{from{translate:0 36px}to{translate:0 -36px}}
+@supports (animation-timeline: view()){
+  .drift-s{animation:driftS linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+}
+.cut-img{display:block;width:100%;height:auto;filter:drop-shadow(0 1px 0 rgba(46,23,14,.4)) drop-shadow(0 18px 16px rgba(46,23,14,.38));transition:rotate .6s cubic-bezier(.2,1.4,.4,1),scale .6s cubic-bezier(.2,1.4,.4,1)}
+
+/* hero: full-body cutout standing in the 3D scene */
+.hero .totem-wrap{left:36%}
+.hero .floor{left:36%}
+.hero .plate{left:47%}
+.hav{position:absolute;left:59%;bottom:0;height:93%;aspect-ratio:603 / 1400;transform:translateZ(-30px);transform-style:preserve-3d;animation:flIn .9s ease 2.5s backwards}
+.hav-sh{position:absolute;left:-8%;right:-14%;bottom:-12px;height:30px;border-radius:50%;background:radial-gradient(ellipse,rgba(46,23,14,.42),transparent 70%)}
+.hav-in{position:relative;height:100%;transform-origin:50% 100%;animation:sway 7s ease-in-out infinite}
+.hav-img{display:block;height:100%;width:auto;max-width:none;filter:drop-shadow(0 1px 0 rgba(46,23,14,.45)) drop-shadow(14px 18px 18px rgba(46,23,14,.32));transition:translate .55s cubic-bezier(.2,1.4,.4,1),rotate .55s cubic-bezier(.2,1.4,.4,1)}
+.hav:hover .hav-img{translate:0 -10px;rotate:-2deg}
+.hero .fl-star{right:auto;left:40%;top:-1%}
+.hero .fl-stamp{right:auto;left:37%;bottom:0}
+
+

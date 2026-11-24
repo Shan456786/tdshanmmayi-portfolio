@@ -1,0 +1,10 @@
+<sc-if value="{{menu}}" hint-placeholder-val="{{ false }}">
+<div class="mn" id="mn" role="dialog" aria-modal="true" aria-label="Contents" tabindex="-1" onKeyDown="{{menuKey}}">
+<div class="mn-top"><span>ISSUE 01 / CONTENTS</span><button class="mn-x" type="button" onClick="{{menuClose}}" data-cur="CLOSE">Close</button></div>
+<ol class="mn-list">
+<sc-for list="{{chapters}}" as="c" hint-placeholder-count="8">
+<li><a class="{{c.cls}}" href="{{c.href}}" onClick="{{c.go}}" style="--mc: {{c.c}}; --mf: {{c.f}}" data-cur="GO"><span class="mn-n">{{c.n}}</span><span class="mn-t">{{c.t}}</span><span class="mn-d">{{c.d}}</span></a></li>
+</sc-for>
+</ol>
+</div>
+</sc-if>

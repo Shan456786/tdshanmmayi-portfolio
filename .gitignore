@@ -1,0 +1,32 @@
+# dependencies and build output
+node_modules/
+dist/
+.vite/
+coverage/
+
+# environment files (this project needs none; never commit real ones)
+.env
+.env.*
+!.env.example
+
+# logs and caches
+*.log
+npm-debug.log*
+.eslintcache
+.cache/
+tests/e2e/.out/
+test-results/
+playwright-report/
+
+# editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# keys and credentials, just in case
+*.pem
+*.key
+*.p12
+id_rsa*

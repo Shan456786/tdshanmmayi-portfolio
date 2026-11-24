@@ -1,0 +1,13 @@
+/* nav: index tabs */
+.tabs{position:fixed;right:0;top:120px;z-index:70;display:flex;flex-direction:column;gap:4px}
+.tab{writing-mode:vertical-rl;transform:translateX(10px);padding:16px 10px;border:1.5px solid var(--g);border-right:0;border-radius:10px 0 0 10px;font:700 12px var(--fm);letter-spacing:.14em;text-decoration:none;color:var(--g);transition:transform .3s cubic-bezier(.2,1.4,.4,1);display:flex;align-items:center;gap:8px;min-width:44px;background:var(--b)}
+.tab:hover{color:var(--g);transform:translateX(0)}
+.tab b{font-weight:700;opacity:.55}
+.tab.t1{background:var(--y)}.tab.t2{background:var(--a)}.tab.t3{background:var(--b)}.tab.t4{background:var(--p)}.tab.t5{background:var(--o)}
+@media (max-width: 760px){
+  .tabs{top:auto;bottom:10px;right:50%;transform:translateX(50%);flex-direction:row;gap:3px;padding:5px;background:var(--g);border-radius:999px}
+  .tab{writing-mode:horizontal-tb;transform:none;border:0;border-radius:999px;padding:0 9px;height:44px;font-size:11px;letter-spacing:.02em;white-space:nowrap}
+  .tab:hover{transform:none}
+  .tab b{display:none}
+}
+

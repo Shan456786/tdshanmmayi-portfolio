@@ -1,0 +1,9 @@
+/* section shared */
+.sec{position:relative;padding:150px max(80px,calc((100% - 1640px) / 2)) 150px max(56px,calc((100% - 1640px) / 2));overflow:hidden}
+.kick{display:flex;align-items:center;gap:14px;font:700 12px var(--fm);letter-spacing:.2em;text-transform:uppercase;max-width:520px}
+.kick::after{content:'';flex:1;height:1.5px;background:currentColor;opacity:.6}
+.kick b{font:italic 400 22px/1 var(--fs);letter-spacing:0;text-transform:none}
+@media (max-width: 760px){
+  .sec{padding:110px 18px}
+}
+

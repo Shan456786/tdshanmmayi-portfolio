@@ -1,0 +1,54 @@
+/* world 01: blueprint + circuit board */
+.w-eng{background-color:var(--c);color:var(--b);background-image:linear-gradient(rgba(252,239,199,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(252,239,199,.1) 1px,transparent 1px),linear-gradient(rgba(252,239,199,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(252,239,199,.05) 1px,transparent 1px);background-size:120px 120px,120px 120px,24px 24px,24px 24px}
+.w-eng .wd-num{color:var(--a)}
+.w-eng .wd-h em{color:var(--y)}
+.w-eng .wd-btn:hover,.w-eng .wd-btn[aria-pressed="true"]{background:var(--y);border-color:var(--y);color:var(--g)}
+.w-eng .wd-hint{color:var(--y)}
+.pcb-scene{position:relative;width:540px;height:460px;perspective:1300px;perspective-origin:50% 25%}
+.pcb-tilt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:hover3 7s ease-in-out infinite;pointer-events:none}
+.pcb-tilt > div{pointer-events:auto}
+.pcb-tr{pointer-events:none}
+.pcb{position:relative;width:420px;height:300px;transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-32deg);background-color:#2FB3B0;background-image:radial-gradient(circle,rgba(46,23,14,.16) 1px,transparent 1.5px);background-size:12px 12px;border-radius:6px;box-shadow:inset 0 0 0 3px rgba(252,239,199,.35)}
+.pcb-floor{position:absolute;inset:-4%;transform:translateZ(-110px) translate(30px,40px);background:rgba(8,20,80,.6);filter:blur(24px);border-radius:40px}
+.pcb-e{position:absolute;background:#1E8C89}
+.pcb-e.e-f{left:0;top:100%;width:100%;height:14px;transform-origin:50% 0;transform:rotateX(-90deg);background:#16706d}
+.pcb-e.e-b{left:0;bottom:100%;width:100%;height:14px;transform-origin:50% 100%;transform:rotateX(90deg)}
+.pcb-e.e-r{top:0;left:100%;width:14px;height:100%;transform-origin:0 50%;transform:rotateY(90deg);background:#1a7c79}
+.pcb-e.e-l{top:0;right:100%;width:14px;height:100%;transform-origin:100% 50%;transform:rotateY(-90deg)}
+.pcb-tr{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tr{fill:none;stroke:rgba(252,239,199,.72);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s}
+.tr.thin{stroke-width:2;stroke:rgba(252,239,199,.45)}
+.via{fill:var(--g);stroke:rgba(252,239,199,.8);stroke-width:2}
+.pcb.on .tr{stroke:var(--y);stroke-dasharray:10 8;animation:dash .9s linear infinite}
+.pcb-silk{position:absolute;font:700 10px var(--fm);letter-spacing:.16em;color:rgba(252,239,199,.85);white-space:nowrap}
+.pcb-silk.s1{left:192px;top:279px}
+.pcb-silk.s2{left:24px;top:160px}
+.led{position:absolute;top:270px;width:12px;height:12px;border-radius:50%;background:#16605e;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25);transition:background .3s,box-shadow .3s}
+.led.l1{left:356px}.led.l2{left:376px}.led.l3{left:396px}
+.pcb.on .led{background:var(--y);box-shadow:0 0 12px 4px rgba(255,225,26,.75)}
+.pcb.on .led.l2{background:var(--p);box-shadow:0 0 12px 4px rgba(255,93,168,.75)}
+.pchip{position:absolute;padding:0;border:0;background:none;transform-style:preserve-3d;transform:translateZ(0);transition:transform .45s cubic-bezier(.2,1.5,.4,1);--d:16px}
+.pchip.cpu{--d:24px}
+.pchip:hover,.pchip.on,.pchip:focus-visible{transform:translateZ(20px)}
+.pchip:focus-visible{outline:none}
+.ch-top{position:absolute;inset:0;transform:translateZ(var(--d));background:var(--g);color:var(--b);display:flex;align-items:center;justify-content:center;font:700 11px var(--fm);letter-spacing:.12em;border-radius:2px;box-shadow:inset 0 0 0 4px var(--g),inset 0 0 0 5px rgba(252,239,199,.28);transition:background .3s,color .3s}
+.pchip.cpu .ch-top{font-size:13px;color:var(--y)}
+.pchip.pk .ch-top{background:var(--p);color:var(--g);box-shadow:inset 0 0 0 4px var(--p),inset 0 0 0 5px rgba(46,23,14,.3)}
+.pchip.on .ch-top,.pchip:focus-visible .ch-top{background:var(--y);color:var(--g);box-shadow:inset 0 0 0 4px var(--y),inset 0 0 0 5px rgba(46,23,14,.35)}
+.pcb.on .pchip:not(.on) .ch-top{text-shadow:0 0 8px rgba(255,225,26,.9)}
+.ch-s{position:absolute;background:#24120a}
+.ch-s.f{left:0;top:100%;width:100%;height:var(--d);transform-origin:50% 0;transform:rotateX(90deg);background:#140904}
+.ch-s.b{left:0;bottom:100%;width:100%;height:var(--d);transform-origin:50% 100%;transform:rotateX(-90deg)}
+.ch-s.r{top:0;left:100%;width:var(--d);height:100%;transform-origin:0 50%;transform:rotateY(-90deg);background:#3a1e12}
+.ch-s.l{top:0;right:100%;width:var(--d);height:100%;transform-origin:100% 50%;transform:rotateY(90deg)}
+.pcb-read{position:absolute;right:-34px;top:-34px;width:220px;padding:14px 16px 16px;background:var(--pp);color:var(--g);border:1.5px solid var(--g);display:flex;flex-direction:column;gap:6px;transform:rotate(2.5deg);box-shadow:0 20px 30px -18px rgba(0,0,0,.6);animation:hover3 6s ease-in-out infinite reverse;z-index:4}
+.pcb-read::before{content:'';position:absolute;left:-46px;bottom:-30px;width:60px;height:1.5px;background:repeating-linear-gradient(90deg,var(--y) 0 6px,transparent 6px 10px);transform:rotate(-35deg);transform-origin:100% 50%}
+.rd-k{font:700 10px var(--fm);letter-spacing:.18em;color:var(--c)}
+.rd-t{font:italic 400 32px/1 var(--fs)}
+.rd-l{font:400 14px/1.4 var(--fd)}
+.wd-cut{position:absolute;margin:0;z-index:3;pointer-events:none}
+.wd-cut img{display:block;width:100%;filter:drop-shadow(0 0 1px rgba(46,23,14,.5)) drop-shadow(0 20px 18px rgba(0,0,0,.4))}
+.wd-cut .tape{left:50%;top:-10px;margin-left:-40px;width:80px;height:24px;transform:rotate(-5deg)}
+.wd-cut figcaption{font:700 24px/1 var(--fh);color:var(--y);transform:rotate(-4deg);margin:6px 0 0 30%}
+.c-eng{left:-4%;bottom:-10px;width:190px;transform:rotate(-6deg)}
+
