@@ -1,17 +1,5 @@
 name: Deploy to GitHub Pages
 
-# Builds the site and publishes it to GitHub Pages.
-#
-# STATUS: automatic. It runs
-#   1. on every push to main
-#   2. after the "Sync LeetCode stats" workflow finishes (a commit pushed with GITHUB_TOKEN does not start a push
-#      run, so this is what puts a fresh public/leetcode.json on the live site every day)
-#   3. when you press "Run workflow" in the Actions tab
-#
-# One-time setup before the first run: Settings > Pages > Build and deployment > Source = "GitHub Actions".
-# Without that setting the deploy step fails with a "Pages not enabled" style error and nothing is published.
-# Not using GitHub Pages? Delete this file. Vercel, Netlify and Cloudflare Pages rebuild on every commit by themselves.
-
 on:
   push:
     branches: [main]
@@ -20,7 +8,6 @@ on:
     types: [completed]
   workflow_dispatch:
 
-# Nothing by default. The job asks only for what publishing needs.
 permissions: {}
 
 concurrency:
@@ -28,19 +15,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    # A cancelled sync run changed nothing, so there is nothing to publish. Success and failure both can
-    # (a failed sync still records "latest refresh failed" in the data file).
+  build:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'cancelled'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read         # read the repository
-      pages: write           # publish to GitHub Pages
-      id-token: write        # lets deploy-pages prove the request came from this repository
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: read
     steps:
       - uses: actions/checkout@v5
 
@@ -61,5 +41,17 @@ jobs:
         with:
           path: dist
 
+  deploy:
+    needs: build
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
