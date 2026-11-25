@@ -4,19 +4,19 @@
   "profileUrl": "https://leetcode.com/u/ShanmayiShree/",
   "source": "leetcode.com/graphql (public, unofficial)",
   "origin": "sync",
-  "fetchedAt": "2026-11-24T16:31:52.718Z",
+  "fetchedAt": "2026-11-25T08:56:28.682Z",
   "lastAttempt": {
-    "at": "2026-11-24T16:31:52.718Z",
+    "at": "2026-11-25T08:56:28.682Z",
     "ok": true,
     "error": null
   },
-  "solved": 254,
+  "solved": 255,
   "easy": 78,
   "medium": 135,
-  "hard": 41,
-  "submissions": 315,
-  "activeDays": 130,
-  "maxStreak": 77,
+  "hard": 42,
+  "submissions": 316,
+  "activeDays": 131,
+  "maxStreak": 78,
   "badges": [
     {
       "name": "100 Days Badge 2026",
@@ -171,9 +171,15 @@
     1,
     1,
     1,
+    1,
     1
   ],
   "recent": [
+    {
+      "title": "Smallest Unique Subarray",
+      "slug": "smallest-unique-subarray",
+      "ts": 1795582316
+    },
     {
       "title": "Maximum Subarray With Equal Products",
       "slug": "maximum-subarray-with-equal-products",
@@ -218,11 +224,6 @@
       "title": "Calculate Digit Sum of a String",
       "slug": "calculate-digit-sum-of-a-string",
       "ts": 1794809204
-    },
-    {
-      "title": "Number of Sub-arrays With Odd Sum",
-      "slug": "number-of-sub-arrays-with-odd-sum",
-      "ts": 1794722870
     }
   ]
 }
