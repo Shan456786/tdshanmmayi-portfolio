@@ -4,9 +4,9 @@
   "profileUrl": "https://leetcode.com/u/ShanmayiShree/",
   "source": "leetcode.com/graphql (public, unofficial)",
   "origin": "sync",
-  "fetchedAt": "2026-11-26T08:42:24.369Z",
+  "fetchedAt": "2026-11-27T08:53:07.623Z",
   "lastAttempt": {
-    "at": "2026-11-26T08:42:24.369Z",
+    "at": "2026-11-27T08:53:07.623Z",
     "ok": true,
     "error": null
   },
@@ -173,7 +173,8 @@
     1,
     1,
     1,
-    1
+    1,
+    0
   ],
   "recent": [
     {
