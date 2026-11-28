@@ -4,19 +4,19 @@
   "profileUrl": "https://leetcode.com/u/ShanmayiShree/",
   "source": "leetcode.com/graphql (public, unofficial)",
   "origin": "sync",
-  "fetchedAt": "2026-11-27T08:53:07.623Z",
+  "fetchedAt": "2026-11-28T08:12:44.821Z",
   "lastAttempt": {
-    "at": "2026-11-27T08:53:07.623Z",
+    "at": "2026-11-28T08:12:44.821Z",
     "ok": true,
     "error": null
   },
-  "solved": 256,
+  "solved": 258,
   "easy": 79,
-  "medium": 135,
+  "medium": 137,
   "hard": 42,
-  "submissions": 317,
-  "activeDays": 132,
-  "maxStreak": 79,
+  "submissions": 319,
+  "activeDays": 134,
+  "maxStreak": 81,
   "badges": [
     {
       "name": "100 Days Badge 2026",
@@ -174,9 +174,20 @@
     1,
     1,
     1,
-    0
+    1,
+    1
   ],
   "recent": [
+    {
+      "title": "Maximum Number of Items From Sale II",
+      "slug": "maximum-number-of-items-from-sale-ii",
+      "ts": 1795847057
+    },
+    {
+      "title": "Maximum Number of Items From Sale I",
+      "slug": "maximum-number-of-items-from-sale-i",
+      "ts": 1795790816
+    },
     {
       "title": "Stone Removal Game",
       "slug": "stone-removal-game",
@@ -216,16 +227,6 @@
       "title": "Minimum Score by Changing Two Elements",
       "slug": "minimum-score-by-changing-two-elements",
       "ts": 1795102048
-    },
-    {
-      "title": "Minimum Number of Changes to Make Binary String Beautiful",
-      "slug": "minimum-number-of-changes-to-make-binary-string-beautiful",
-      "ts": 1794982018
-    },
-    {
-      "title": "Minimum Changes to Make K Semi-palindromes",
-      "slug": "minimum-changes-to-make-k-semi-palindromes",
-      "ts": 1794923077
     }
   ]
 }
